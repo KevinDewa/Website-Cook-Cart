@@ -1,0 +1,2549 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dasbor Keuangan - Cook&Cart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-light: #ecfdf5;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --btn-brown: #a16207;
+      --input-bg: #f1f5f9;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================
+       1. MAIN NAV (RESPONSIVE)
+       ============================ */
+    .main-nav {
+      width: var(--sidebar-width);
+      background-color: var(--card-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 900;
+    }
+
+    .nav-brand {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      margin-bottom: 48px;
+      padding-left: 12px;
+      letter-spacing: -0.5px;
+      display: block;
+    }
+
+    .brand-mobile {
+      display: none;
+      color: var(--primary);
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background-color: var(--input-bg);
+      color: var(--text-main);
+    }
+
+    .nav-item.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-item .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+    }
+
+    .nav-item img.icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .text-mobile {
+      display: none;
+    }
+
+    /* ================= MAIN CONTENT ================= */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: clamp(20px, 4vw, 40px);
+      max-width: 1440px;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      transition: margin 0.3s ease;
+    }
+
+    /* HEADER */
+    .header-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+
+    .header-title h1 {
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: clamp(13px, 1.5vw, 15px);
+    }
+
+    .header-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: max-content;
+    }
+
+    /* MODE TOGGLE - Penjual/Pembeli */
+    .time-penentuan {
+      display: flex;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .time-penentuan button {
+      padding: 10px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-muted);
+      flex: 1;
+      white-space: nowrap;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .time-penentuan button.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .time-penentuan button:hover:not(.active) {
+      background-color: var(--input-bg);
+    }
+
+    .time-toggle {
+      display: flex;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .time-toggle button {
+      padding: 10px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-muted);
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    .time-toggle button.active {
+      background-color: var(--input-bg);
+      color: var(--text-main);
+    }
+
+    .export-btn-mobile {
+      display: none;
+      width: 100%;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* CARDS */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: clamp(16px, 3vw, 24px);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card.mode-edit {
+      border-top: 3px solid #3b82f6;
+    }
+
+    .summary-card {
+      max-width: 300px;
+    }
+
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .summary-value {
+      font-size: clamp(24px, 3vw, 28px);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .summary-trend {
+      color: #ef4444;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .summary-trend.positive {
+      color: var(--primary);
+    }
+
+    /* FLUID LAYOUT */
+    .flex-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+
+    .flex-2 {
+      flex: 2 1 480px;
+      min-width: 0;
+      margin-bottom: 0;
+    }
+
+    .flex-1 {
+      flex: 1 1 280px;
+      min-width: 0;
+      margin-bottom: 0;
+    }
+
+    /* CALCULATOR FLUID GRID */
+    .calc-header p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      margin-top: -12px;
+      font-size: 14px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .calc-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: space-between;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background-color: var(--input-bg);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+
+    .input-wrapper span {
+      color: var(--text-muted);
+      margin-right: 8px;
+      font-weight: 500;
+    }
+
+    .input-wrapper input {
+      border: none;
+      background: none;
+      outline: none;
+      width: 100%;
+      font-family: inherit;
+      font-size: 16px;
+      color: var(--text-main);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.2s;
+      text-align: center;
+      width: 100%;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-brown {
+      background-color: var(--btn-brown);
+      color: white;
+    }
+
+    .btn-green {
+      background-color: var(--primary);
+      color: white;
+      width: auto;
+    }
+
+    .btn-gray {
+      background-color: var(--input-bg);
+      color: var(--text-muted);
+      width: auto;
+      border: 1px solid var(--border-color);
+    }
+
+    .result-box {
+      background-color: #fafafa;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .result-box.highlight {
+      background-color: var(--primary-light);
+      border-color: var(--primary-light);
+      position: relative;
+    }
+
+    .result-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .highlight .result-label {
+      color: var(--primary);
+    }
+
+    .result-value {
+      font-size: clamp(20px, 2.5vw, 24px);
+      font-weight: 700;
+    }
+
+    .highlight .result-value {
+      color: var(--primary);
+    }
+
+    .margin-info {
+      text-align: right;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .badge-white {
+      background-color: white;
+      color: var(--primary);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* CHART & DIST */
+    .chart-container {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    .dist-item {
+      margin-bottom: 16px;
+    }
+
+    .dist-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .dist-bar-bg {
+      height: 8px;
+      background-color: var(--input-bg);
+      border-radius: 4px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .dist-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* FORMS & TABLE */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .form-input {
+      background-color: var(--input-bg);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: inherit;
+      width: 100%;
+      font-size: 14px;
+      outline: none;
+      color: var(--text-main);
+    }
+
+    select.form-input {
+      appearance: none;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px;
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 12px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    .table-footer {
+      text-align: center;
+      padding-top: 16px;
+    }
+
+    .link-green {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ===== STATUS BADGES ===== */
+    .badge-aman {
+      display: inline-flex;
+      align-items: center;
+      background-color: #ecfdf5;
+      color: #059669;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-over {
+      display: inline-flex;
+      align-items: center;
+      background-color: #fef2f2;
+      color: #ef4444;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ===== AKSI BUTTONS ===== */
+    .td-aksi {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-aksi {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.15s, transform 0.1s;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+
+    .btn-aksi:active {
+      transform: scale(0.96);
+    }
+
+    .btn-edit {
+      background-color: #eff6ff;
+      color: #3b82f6;
+    }
+
+    .btn-edit:hover {
+      background-color: #dbeafe;
+    }
+
+    .btn-delete {
+      background-color: #fef2f2;
+      color: #ef4444;
+    }
+
+    .btn-delete:hover {
+      background-color: #fee2e2;
+    }
+
+    tr.row-editing td {
+      background-color: #fffbeb;
+    }
+
+    /* ===== MODE SECTIONS (HIDE/SHOW) ===== */
+    .mode-section {
+      display: none;
+    }
+
+    .mode-section.active {
+      display: block;
+    }
+
+    /* Alarm Warning for Buyer */
+    .alarm-warning {
+      background-color: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alarm-warning.show {
+      display: flex;
+    }
+
+    .alarm-warning p {
+      font-size: 14px;
+      color: #92400e;
+      font-weight: 500;
+    }
+
+    /* Budget Progress */
+    .budget-progress {
+      margin-top: 16px;
+    }
+
+    .budget-bar-bg {
+      height: 12px;
+      background-color: var(--input-bg);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .budget-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s ease;
+      background-color: var(--primary);
+    }
+
+    .budget-bar-fill.warning {
+      background-color: #f59e0b;
+    }
+
+    .budget-bar-fill.danger {
+      background-color: #ef4444;
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255, 255, 255, 0.25) 5px, rgba(255, 255, 255, 0.25) 10px);
+    }
+
+    /* Chart Placeholder */
+    .chart-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      background: #fafafa;
+      border-radius: 12px;
+    }
+
+    .chart-placeholder p {
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .chart-placeholder svg {
+      width: 48px;
+      height: 48px;
+      stroke: #cbd5e1;
+    }
+
+    .budget-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Break Even Card */
+    .break-even-card {
+      background: linear-gradient(135deg, var(--primary-light) 0%, #f0fdf4 100%);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .break-even-card h4 {
+      color: var(--primary);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .break-even-card .value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* ================= MEDIA QUERIES (RESPONSIVE) ================= */
+    @media (max-width: 1024px) {
+      .main-nav {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        padding: 8px 4px;
+        flex-direction: row;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .nav-brand {
+        display: none;
+      }
+
+      .nav-links {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        gap: 4px;
+        flex: 1;
+        min-width: 55px;
+        background-color: transparent !important;
+        border-radius: 0;
+      }
+
+      .nav-item:hover {
+        background-color: transparent !important;
+      }
+
+      .nav-item.active {
+        color: var(--primary);
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 14px;
+      }
+
+      .nav-item.active .icon-wrapper {
+        background-color: var(--primary-light);
+      }
+
+      .nav-item img.icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .nav-text {
+        font-size: 10px;
+        white-space: nowrap;
+      }
+
+      .text-desktop {
+        display: none;
+      }
+
+      .text-mobile {
+        display: inline;
+      }
+
+      body {
+        padding-bottom: 70px;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .header-actions {
+        max-width: 100%;
+      }
+
+      .flex-2,
+      .flex-1 {
+        flex: 1 1 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 16px;
+        padding-bottom: 90px;
+      }
+
+      .brand-mobile {
+        display: block;
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 12px;
+      }
+
+      .nav-item img.icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .nav-text {
+        font-size: 9px;
+      }
+
+      .header-wrapper {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .summary-card {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .export-btn-mobile {
+        display: flex;
+      }
+
+      .btn-green {
+        width: 100%;
+      }
+
+      .btn-gray {
+        width: 100%;
+      }
+
+      .sec-summary {
+        order: 1;
+      }
+
+      .sec-calc-personal {
+        order: 2;
+      }
+
+      .sec-chart-dist {
+        order: 3;
+      }
+
+      .sec-trans-history {
+        order: 4;
+      }
+
+      .sec-calc-business {
+        order: 5;
+      }
+    }
+
+    @media (min-width: 1441px) {
+      .main-content {
+        max-width: 2560px;
+      }
+    }
+
+    @media (min-width: 2560px) {
+      .main-content {
+        margin-left: var(--sidebar-width);
+        max-width: 2560px;
+      }
+
+      .header-title h1 {
+        font-size: 32px;
+      }
+
+      .header-title p {
+        font-size: 16px;
+      }
+
+      .card-title {
+        font-size: 22px;
+      }
+
+      .summary-value {
+        font-size: 34px;
+      }
+
+      .result-value {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="main-nav">
+    <a class="nav-brand">Cook&Cart</a>
+    <div class="nav-links">
+      <a href="JelajahResep.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconJelajah.svg" alt="" class="icon"></div>
+        <span class="nav-text">Jelajah</span>
+      </a>
+      <a href="rencanaMenuMingguan.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconRencana.svg" alt="" class="icon"></div>
+        <span class="nav-text">Rencana</span>
+      </a>
+      <a href="PDF_belanja.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconPDFRencana.svg" alt="" class="icon"></div>
+        <span class="nav-text text-desktop">PDF Rencana</span>
+        <span class="nav-text text-mobile">PDF</span>
+      </a>
+      <a href="Pengeluaran.html" class="nav-item active">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconPengeluaran.svg" alt="" class="icon"></div>
+        <span class="nav-text text-desktop">Pengeluaran</span>
+        <span class="nav-text text-mobile">Biaya</span>
+      </a>
+      <a href="upload_Resep.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconUploadResep.svg" alt="" class="icon"></div>
+        <span class="nav-text text-desktop">Upload Resep</span>
+        <span class="nav-text text-mobile">Upload</span>
+      </a>
+      <a href="profil.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconProfil.svg" alt="" class="icon"></div>
+        <span class="nav-text">Profil</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <div class="header-wrapper">
+      <div class="header-title">
+        <div class="brand-mobile">Cook&Cart</div>
+        <div class="time-penentuan">
+          <button id="btn_penjual" class="active" onclick="switchMode('penjual')">
+            <i data-feather="shopping-bag" style="width:16px;height:16px;"></i>
+            Sebagai Penjual
+          </button>
+          <button id="btn_pembeli" onclick="switchMode('pembeli')">
+            <i data-feather="shopping-cart" style="width:16px;height:16px;"></i>
+            Sebagai Pembeli
+          </button>
+        </div>
+        <h1 id="page_title">Dasbor Keuangan</h1>
+        <p id="page_subtitle">Pantau semua arus uang Anda dalam satu tempat.</p>
+      </div>
+      <div class="header-actions">
+        <div class="time-toggle">
+          <button class="active">Hari Ini</button>
+          <button>Mingguan</button>
+          <button>Bulanan</button>
+        </div>
+        <button class="export-btn-mobile"><i data-feather="file-text"></i> Ekspor PDF Laporan</button>
+      </div>
+    </div>
+
+    <section id="section_penjual" class="mode-section active">
+      <div class="card summary-card sec-summary">
+        <div class="summary-header">
+          <span>Total Profit Periode Ini</span>
+          <img src="img\Pengeluaran\IconTotal.svg" alt="Total" class="icon">
+        </div>
+        <div class="summary-value" id="top_total_penjual">Rp 0</div>
+        <div class="summary-trend">
+          <i data-feather="trending-up" style="width:14px; height:14px;"></i> Masukkan data untuk melihat profit
+        </div>
+      </div>
+
+      <div class="card sec-calc-business">
+        <div class="calc-header">
+          <div class="card-title" style="margin-bottom: 8px;">Perhitungan Profit Usaha</div>
+          <p>Catat transaksi penjualan dan biaya produksi untuk menghitung profit.</p>
+        </div>
+        <div class="calc-grid">
+          <div class="calc-col">
+            <div class="input-group">
+              <label>Total Penjualan (Pendapatan)</label>
+              <div class="input-wrapper">
+                <span>Rp</span>
+                <input type="number" id="seller_penjualan" placeholder="Total pendapatan penjualan">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Biaya Operasional Lainnya</label>
+              <div class="input-wrapper">
+                <span>Rp</span>
+                <input type="number" id="seller_biaya_operasional" placeholder="Biaya listrik, sewa, dll (opsional)">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Filter Tanggal</label>
+              <div class="input-wrapper">
+                <span><i data-feather="calendar" style="width:16px;height:16px;"></i></span>
+                <input type="date" id="seller_filter_tanggal" onchange="muatProfitData(); hitungPenjual();">
+              </div>
+            </div>
+            <button type="button" id="btn_hitung_profit" class="btn btn-brown" onclick="simpanHitungProfit()">Hitung
+              Profit</button>
+          </div>
+          <div class="calc-col">
+            <div class="result-box">
+              <div class="result-label">Total Penjualan</div>
+              <div class="result-value" id="res_penghasilan_kotor">Rp 0</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Total Biaya Produksi</div>
+              <div class="result-value" id="res_total_biaya">Rp 0</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Biaya Operasional</div>
+              <div class="result-value" id="res_biaya_operasional">Rp 0</div>
+            </div>
+          </div>
+          <div class="calc-col">
+            <div class="result-box" style="padding-bottom: 16px;">
+              <div class="result-label">Laba Kotor (Gross Profit)</div>
+              <div class="result-value" id="res_laba_kotor" style="font-size: 18px;">Rp 0</div>
+            </div>
+            <div class="result-box highlight">
+              <span class="badge-white">Bersih <span class="dot"></span></span>
+              <div class="result-label">Laba Bersih (Net Profit)</div>
+              <div class="result-value" id="res_laba_bersih">Rp 0</div>
+              <div style="margin-top: 12px;">
+                <div class="dist-bar-bg">
+                  <div class="dist-bar-fill" id="profit_bar" style="width: 0%; background-color: var(--primary);"></div>
+                </div>
+                <div class="margin-info" id="res_margin">Margin 0%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-layout sec-chart-dist">
+        <div class="card flex-2">
+          <div class="card-title">
+            Tren Penjualan
+            <a href="#" class="link-green" style="font-size:13px;">Lihat Detail &rarr;</a>
+          </div>
+          <div class="chart-container" style="position:relative;">
+            <canvas id="sellerChart"></canvas>
+            <div id="chart_seller_placeholder"
+              style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;color:#64748b;background:#fafafa;">
+              <p>Belum ada data penjualan</p>
+            </div>
+          </div>
+        </div>
+        <div class="card flex-1">
+          <div class="card-title">Distribusi Penjualan</div>
+          <div class="dist-list" id="dist_penjual">
+            <p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section_pembeli" class="mode-section">
+      <div class="alarm-warning" id="alarm_warning_buyer">
+        <i data-feather="alert-triangle" style="width:24px;height:24px;color:#f59e0b;"></i>
+        <p id="alarm_message_buyer">⚠️ Budget Anda sudah tercapai 80%!</p>
+      </div>
+
+      <div class="card summary-card sec-summary">
+        <div class="summary-header">
+          <span>Sisa Budget Bulanan</span>
+          <img src="img\Pengeluaran\IconTotal.svg" alt="Total" class="icon">
+        </div>
+        <div class="summary-value" id="top_total_pembeli" style="color: var(--primary);">Rp 0</div>
+        <div class="summary-trend">
+          <i data-feather="trending-up" style="width:14px; height:14px;"></i> Bisa ditabung: Rp 0
+        </div>
+      </div>
+
+      <div class="card sec-calc-personal">
+        <div class="calc-header">
+          <div class="card-title" style="margin-bottom: 8px;">Perhitungan Untuk Kelola Uang Pribadi</div>
+          <p>Lihat perkiraan uang yang bisa kamu tabung</p>
+        </div>
+        <div id="buyer_period_indicator"
+          style="background: var(--primary-light); border: 1px solid var(--primary); border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <i data-feather="filter" style="width:18px;height:18px;color: var(--primary);"></i>
+          <span style="font-size: 14px; font-weight: 600; color: var(--primary);">📅 Filter: <span
+              id="buyer_active_period">Bulanan</span></span>
+        </div>
+        <div class="calc-grid">
+          <div class="calc-col">
+            <div class="input-group">
+              <label>
+                <span class="text-desktop">Budget Bulanan</span>
+                <span class="text-mobile">Budget Bulanan</span>
+              </label>
+              <div class="input-wrapper">
+                <span>Rp</span>
+                <input type="number" id="buyer_budget" placeholder="Total budget bulanan">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Target Tabungan (%)</label>
+              <div class="input-wrapper">
+                <span>%</span>
+                <input type="number" id="buyer_target_tabung" placeholder="Persentase tabungan">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Pengeluaran Ekstra / Manual</label>
+              <div class="input-wrapper">
+                <span>Rp</span>
+                <input type="number" id="buyer_total_belanja" placeholder="Total belanja lain (opsional)">
+              </div>
+            </div>
+            <button class="btn btn-brown" id="btn_hitung_pembeli" onclick="simpanHitungPembeli()">Hitung</button>
+          </div>
+          <div class="calc-col">
+            <div class="result-box">
+              <div class="result-label">Total Belanja Periode Ini</div>
+              <div class="result-value" id="res_belanja_pembeli">Rp 0</div>
+            </div>
+          </div>
+          <div class="calc-col">
+            <div class="result-box" style="padding-bottom: 16px;">
+              <div class="result-label">Sisa Budget Periode Ini</div>
+              <div class="result-value" id="res_sisa_pembeli" style="font-size: 18px;">Rp 0</div>
+            </div>
+            <div class="result-box highlight">
+              <div class="result-label">Perkiraan Bisa Ditabung</div>
+              <div class="result-value" id="res_tabung_pembeli">Rp 0</div>
+            </div>
+            <div class="budget-progress">
+              <div class="budget-bar-bg">
+                <div class="budget-bar-fill" id="budget_bar" style="width: 0%;"></div>
+              </div>
+              <div class="budget-stats">
+                <span id="budget_used_pct">0% terpakai</span>
+                <span id="budget_remaining">Rp 0 sisa</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-layout sec-chart-dist">
+        <div class="card flex-2">
+          <div class="card-title">
+            Tren Keuangan Target Anggaran
+            <a href="#" class="link-green" style="font-size:13px;">Lihat Detail &rarr;</a>
+          </div>
+          <div class="chart-container"><canvas id="buyerChart"></canvas></div>
+        </div>
+        <div class="card flex-1">
+          <div class="card-title">Distribusi Kategori Belanja</div>
+          <div class="dist-list" id="dist_pembeli">
+            <p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="flex-layout sec-trans-history">
+      <div class="card flex-2" id="card_catat_transaksi">
+        <div class="card-title" id="title_catat">Catat Transaksi Penjualan</div>
+        <div class="form-grid">
+          <input type="text" class="form-input" id="inp_nama" placeholder="Nama Barang">
+          <div
+            style="background-color: var(--input-bg); border-radius: 8px; padding-right: 12px; display: flex; align-items: center;">
+            <select class="form-input" id="inp_kategori" style="background: transparent; padding-right: 0;">
+            </select>
+          </div>
+          <input type="number" class="form-input" id="inp_jumlah" placeholder="Jumlah">
+          <input type="number" class="form-input" id="inp_harga" placeholder="Harga Total (Rp)">
+          <input type="text" class="form-input" id="inp_merchant" placeholder="Merchant/Pasar">
+          <input type="date" class="form-input" id="inp_tanggal">
+        </div>
+        <textarea class="form-input" id="inp_catatan" placeholder="Catatan (Opsional)"
+          style="width:100%; resize:none; margin-bottom:20px; height:80px;"></textarea>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-gray" id="btn_batal" onclick="batalEdit()" style="display:none;">Batal Edit</button>
+          <button class="btn btn-green" id="btn_simpan" onclick="simpanTransaksi()">Simpan Transaksi</button>
+        </div>
+      </div>
+
+      <div class="card flex-1">
+        <div class="card-title">
+          Riwayat Terakhir
+          <img src="img\Pengeluaran\IconRiwayat.svg" alt="Riwayat" class="icon">
+        </div>
+        <div class="table-responsive">
+          <table id="tabel_riwayat">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Nama Barang</th>
+                <th>Merchant</th>
+                <th>Kategori</th>
+                <th>Nominal</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <a href="#" class="link-green">Lihat Semua Riwayat</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    feather.replace();
+
+    // ============================
+    // STORAGE & DATA MANAGER
+    // ============================
+    const STORAGE_KEY = 'cookcart_transactions';
+    const CATEGORIES_PEMBELI = ['Bahan Pokok', 'Bumbu', 'Cemilan', 'Sayuran', 'Buah-buahan', 'Daging Sapi', 'Daging Ayam', 'Daging Kambing', 'Ikan', 'Seafood', 'Telur', 'Susu', 'Keju', 'Yogurt', 'Roti', 'Mie', 'Pasta', 'Beras', 'Minyak Goreng', 'Frozen Food', 'Makanan Kaleng', 'Makanan Instan', 'Minuman', 'Air Mineral', 'Kopi', 'Teh', 'Bahan Kue', 'Saus', 'Rempah-rempah', 'Produk Organik', 'Peralatan Dapur', 'Peralatan Makan', 'Kebersihan Rumah', 'Lainnya'];
+    const CATEGORIES_PENJUAL = ['Packaging', 'Operasional', 'Bahan Baku', 'Tenaga Kerja', 'Daging', 'Ayam', 'Ikan', 'Seafood', 'Sayuran', 'Buah-buahan', 'Bumbu Dapur', 'Rempah-rempah', 'Beras', 'Minyak Goreng', 'Telur', 'Susu & Olahan', 'Tepung', 'Bahan Kue', 'Frozen Food', 'Gas LPG', 'Listrik', 'Air', 'Internet', 'Sewa Tempat', 'Peralatan Dapur', 'Perawatan Peralatan', 'Kebersihan', 'Promosi', 'Iklan Digital', 'Marketplace Fee', 'Komisi Penjualan', 'Pajak', 'Perizinan', 'ATK', 'Pengiriman', 'Transport', 'Lainnya'];
+
+    function getAllTransactions() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveTransactions(transactions) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+    }
+
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka).replace('Rp', 'Rp ');
+
+    // ============================
+    // FILTER DATA BERDASARKAN WAKTU (UNTUK PEMBELI)
+    // ============================
+    let currentFilter = 'harian';
+
+    function getFilteredTransactions(transactions) {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+      let startDate, endDate;
+
+      switch (currentFilter) {
+        case 'harian':
+          startDate = new Date(currentYear, currentMonth, currentDate, 0, 0, 0, 0);
+          endDate = new Date(currentYear, currentMonth, currentDate, 23, 59, 59, 999);
+          break;
+        case 'mingguan':
+          startDate = new Date(currentYear, currentMonth, 1, 0, 0, 0, 0);
+          endDate = new Date(currentYear, currentMonth, currentDate, 23, 59, 59, 999);
+          break;
+        case 'bulanan':
+        default:
+          startDate = new Date(currentYear, 0, 1, 0, 0, 0, 0);
+          endDate = new Date(currentYear, currentMonth, currentDate, 23, 59, 59, 999);
+          break;
+      }
+
+      return transactions.filter(t => {
+        const tgl = new Date(t.tanggal + 'T00:00:00');
+        return tgl >= startDate && tgl <= endDate;
+      });
+    }
+
+    // ============================
+    // STORAGE PROFIT MANUAL (PENJUAL)
+    // ============================
+    const PROFIT_STORAGE_KEY = 'cookcart_profit_data';
+
+    function getProfitKey() {
+      const filterTanggal = document.getElementById('seller_filter_tanggal').value;
+      let targetDate = new Date();
+
+      if (filterTanggal && filterTanggal !== '') {
+        targetDate = new Date(filterTanggal + 'T00:00:00');
+      }
+
+      const yyyy = targetDate.getFullYear();
+      const mm = String(targetDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(targetDate.getDate()).padStart(2, '0');
+
+      return `profit_${yyyy}-${mm}-${dd}`;
+    }
+
+    function muatProfitData() {
+      const filterTanggal = document.getElementById('seller_filter_tanggal').value;
+
+      if (filterTanggal && filterTanggal !== '') {
+        const key = `profit_${filterTanggal}`;
+        const raw = localStorage.getItem(PROFIT_STORAGE_KEY);
+        const data = raw ? JSON.parse(raw) : {};
+
+        if (data[key]) {
+          document.getElementById('seller_penjualan').value = data[key].penjualan || '';
+          document.getElementById('seller_biaya_operasional').value = data[key].operasional || '';
+        } else {
+          document.getElementById('seller_penjualan').value = '';
+          document.getElementById('seller_biaya_operasional').value = '';
+        }
+        return;
+      }
+
+      if (currentFilter === 'harian') {
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        const key = `profit_${todayStr}`;
+        const raw = localStorage.getItem(PROFIT_STORAGE_KEY);
+        const data = raw ? JSON.parse(raw) : {};
+
+        if (data[key]) {
+          document.getElementById('seller_penjualan').value = data[key].penjualan || '';
+          document.getElementById('seller_biaya_operasional').value = data[key].operasional || '';
+        } else {
+          document.getElementById('seller_penjualan').value = '';
+          document.getElementById('seller_biaya_operasional').value = '';
+        }
+      }
+    }
+
+    function simpanHitungProfit() {
+      const penjualan = parseFloat(document.getElementById('seller_penjualan').value) || 0;
+      const operasional = parseFloat(document.getElementById('seller_biaya_operasional').value) || 0;
+
+      const key = getProfitKey();
+      const raw = localStorage.getItem(PROFIT_STORAGE_KEY);
+      const data = raw ? JSON.parse(raw) : {};
+
+      data[key] = { penjualan, operasional };
+      localStorage.setItem(PROFIT_STORAGE_KEY, JSON.stringify(data));
+
+      const btn = document.getElementById('btn_hitung_profit');
+      const originalText = 'Hitung Profit';
+      btn.innerText = '✓ Tersimpan';
+      btn.style.backgroundColor = 'var(--primary)';
+      btn.style.color = 'white';
+
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.backgroundColor = 'var(--btn-brown)';
+      }, 2000);
+
+      hitungPenjual();
+    }
+
+    // ============================
+    // STORAGE BUDGET MANUAL (PEMBELI)
+    // ============================
+    const BUYER_STORAGE_KEY = 'cookcart_buyer_data';
+
+    function muatBuyerData() {
+      const raw = localStorage.getItem(BUYER_STORAGE_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        document.getElementById('buyer_budget').value = data.budget || '';
+        document.getElementById('buyer_target_tabung').value = data.targetTabung || '';
+        document.getElementById('buyer_total_belanja').value = data.belanjaManual || '';
+      }
+    }
+
+    function simpanHitungPembeli() {
+      const budgetInput = document.getElementById('buyer_budget');
+      const targetTabungInput = document.getElementById('buyer_target_tabung');
+      const belanjaManualInput = document.getElementById('buyer_total_belanja');
+
+      let budget = parseFloat(budgetInput.value) || 0;
+      let targetTabung = parseFloat(targetTabungInput.value) || 0;
+      let belanjaManual = parseFloat(belanjaManualInput.value) || 0;
+
+      if (budget > 0 && budget < 10000) {
+        alert('Budget minimal Rp 10.000');
+        budgetInput.focus();
+        return;
+      }
+      if (budget > 999999999) {
+        alert('Budget maksimal Rp 999.999.999');
+        budgetInput.focus();
+        return;
+      }
+
+      if (targetTabung < 0 || targetTabung > 100) {
+        alert('Target tabungan harus antara 0% - 100%');
+        targetTabungInput.focus();
+        return;
+      }
+
+      if (belanjaManual < 0) {
+        alert('Pengeluaran manual tidak boleh negatif');
+        belanjaManualInput.focus();
+        return;
+      }
+
+      localStorage.setItem(BUYER_STORAGE_KEY, JSON.stringify({ budget, targetTabung, belanjaManual }));
+
+      const btn = document.getElementById('btn_hitung_pembeli');
+      if (btn) {
+        const originalText = 'Hitung';
+        btn.innerText = '✓ Tersimpan';
+        btn.style.backgroundColor = 'var(--primary)';
+        btn.style.color = 'white';
+
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.backgroundColor = 'var(--btn-brown)';
+        }, 2000);
+      }
+
+      hitungPembeli();
+    }
+
+    // ============================
+    // MODE TOGGLE LOGIC
+    // ============================
+    let currentMode = 'penjual';
+
+    function switchMode(mode) {
+      currentMode = mode;
+
+      document.getElementById('btn_penjual').classList.toggle('active', mode === 'penjual');
+      document.getElementById('btn_pembeli').classList.toggle('active', mode === 'pembeli');
+
+      document.getElementById('section_penjual').classList.toggle('active', mode === 'penjual');
+      document.getElementById('section_pembeli').classList.toggle('active', mode === 'pembeli');
+
+      const pageTitle = document.getElementById('page_title');
+      const pageSubtitle = document.getElementById('page_subtitle');
+
+      if (mode === 'penjual') {
+        pageTitle.textContent = 'Dasbor Keuangan';
+        pageSubtitle.textContent = 'Pantau semua arus uang Anda dalam satu tempat.';
+        renderSellerChart();
+        hitungPenjual();
+      } else {
+        pageTitle.textContent = 'Dasbor Keuangan';
+        pageSubtitle.textContent = 'Kelola budget belanja rumah tangga Anda dengan bijak.';
+        updateBuyerPeriodIndicator();
+        renderBuyerChart();
+        hitungPembeli();
+      }
+
+      renderRiwayatTransaksi();
+      updateKategoriOptions();
+    }
+
+    function setTimeFilter(filter) {
+      console.log('setTimeFilter called with:', filter);
+      currentFilter = filter;
+      console.log('currentFilter updated to:', currentFilter);
+
+      const sellerFilterInput = document.getElementById('seller_filter_tanggal');
+      if (sellerFilterInput) sellerFilterInput.value = '';
+
+      const buttons = document.querySelectorAll('.time-toggle button');
+      const filters = ['harian', 'mingguan', 'bulanan'];
+      buttons.forEach((btn, idx) => {
+        if (filters[idx] === filter) {
+          btn.classList.add('active');
+          console.log('Button active:', btn.textContent.trim());
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      updateBuyerPeriodIndicator();
+
+      if (currentMode === 'penjual') {
+        console.log('Mode: Penjual - re-render');
+        muatProfitData();
+        hitungPenjual();
+        renderSellerChart();
+      } else {
+        console.log('Mode: Pembeli - re-render with filter:', currentFilter);
+        hitungPembeli();
+        renderBuyerChart();
+      }
+
+      renderRiwayatTransaksi();
+    }
+
+    function updateBuyerPeriodIndicator() {
+      const periodLabels = {
+        'harian': 'Hari Ini',
+        'mingguan': 'Minggu Ini',
+        'bulanan': 'Bulan Ini'
+      };
+      const periodElement = document.getElementById('buyer_active_period');
+      if (periodElement) {
+        periodElement.textContent = periodLabels[currentFilter] || 'Bulan Ini';
+      }
+    }
+
+    function updateKategoriOptions() {
+      const select = document.getElementById('inp_kategori');
+      const titleCatat = document.getElementById('title_catat');
+
+      if (currentMode === 'penjual') {
+        select.innerHTML =
+          '<option value="">Kategori</option>' +
+          CATEGORIES_PENJUAL.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+
+        titleCatat.innerText = 'Catat Transaksi Penjualan';
+      } else {
+        select.innerHTML =
+          '<option value="">Kategori</option>' +
+          CATEGORIES_PEMBELI.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+
+        titleCatat.innerText = 'Catat Transaksi Belanja';
+      }
+    }
+
+    // ============================
+    // UPDATE TOP SUMMARY (PENJUAL)
+    // ============================
+    function updateTopSummaryPenjual() {
+      const allTrans = getAllTransactions().filter(t => t.mode === 'penjual');
+      const rawProfit = localStorage.getItem(PROFIT_STORAGE_KEY);
+      const profitDb = rawProfit ? JSON.parse(rawProfit) : {};
+
+      const filterTanggal = document.getElementById('seller_filter_tanggal').value;
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+
+      let totalPenjualan = 0;
+      let totalCost = 0;
+      let totalOperasional = 0;
+
+      if (filterTanggal && filterTanggal !== '') {
+        totalCost = allTrans.filter(t => t.tanggal === filterTanggal).reduce((sum, t) => sum + parseInt(t.harga || 0), 0);
+        const pData = profitDb[`profit_${filterTanggal}`] || { penjualan: 0, operasional: 0 };
+        totalPenjualan = pData.penjualan;
+        totalOperasional = pData.operasional;
+      } else {
+        if (currentFilter === 'harian') {
+          const targetDateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+          totalCost = allTrans.filter(t => t.tanggal === targetDateStr).reduce((sum, t) => sum + parseInt(t.harga || 0), 0);
+          const pData = profitDb[`profit_${targetDateStr}`] || { penjualan: 0, operasional: 0 };
+          totalPenjualan = pData.penjualan;
+          totalOperasional = pData.operasional;
+        } else if (currentFilter === 'mingguan') {
+          allTrans.forEach(t => {
+            const tDate = new Date(t.tanggal + 'T00:00:00');
+            if (tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth) {
+              totalCost += parseInt(t.harga || 0);
+            }
+          });
+          Object.keys(profitDb).forEach(key => {
+            if (key.startsWith('profit_')) {
+              const dateStr = key.replace('profit_', '');
+              const pDate = new Date(dateStr + 'T00:00:00');
+              if (pDate.getFullYear() === currentYear && pDate.getMonth() === currentMonth) {
+                totalPenjualan += profitDb[key].penjualan || 0;
+                totalOperasional += profitDb[key].operasional || 0;
+              }
+            }
+          });
+        } else if (currentFilter === 'bulanan') {
+          allTrans.forEach(t => {
+            const tDate = new Date(t.tanggal + 'T00:00:00');
+            if (tDate.getFullYear() === currentYear) {
+              totalCost += parseInt(t.harga || 0);
+            }
+          });
+          Object.keys(profitDb).forEach(key => {
+            if (key.startsWith('profit_')) {
+              const dateStr = key.replace('profit_', '');
+              const pDate = new Date(dateStr + 'T00:00:00');
+              if (pDate.getFullYear() === currentYear) {
+                totalPenjualan += profitDb[key].penjualan || 0;
+                totalOperasional += profitDb[key].operasional || 0;
+              }
+            }
+          });
+        }
+      }
+
+      const finalProfit = totalPenjualan - totalCost - totalOperasional;
+      document.getElementById('top_total_penjual').innerText = formatRp(Math.max(finalProfit, 0));
+    }
+
+    function updateDistribusiPenjualWrapper() {
+      const allTrans = getAllTransactions().filter(t => t.mode === 'penjual');
+      const filterTanggal = document.getElementById('seller_filter_tanggal').value;
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+
+      let filtered = [];
+
+      if (filterTanggal && filterTanggal !== '') {
+        filtered = allTrans.filter(t => t.tanggal === filterTanggal);
+      } else {
+        if (currentFilter === 'harian') {
+          const targetDateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+          filtered = allTrans.filter(t => t.tanggal === targetDateStr);
+        } else if (currentFilter === 'mingguan') {
+          filtered = allTrans.filter(t => {
+            const d = new Date(t.tanggal + 'T00:00:00');
+            return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
+          });
+        } else {
+          filtered = allTrans.filter(t => {
+            const d = new Date(t.tanggal + 'T00:00:00');
+            return d.getFullYear() === currentYear;
+          });
+        }
+      }
+      updateDistribusiPenjual(filtered);
+    }
+
+    // ============================
+    // PERHITUNGAN PENJUAL (BUSINESS)
+    // ============================
+    function hitungPenjual() {
+      const transactions = getAllTransactions().filter(t => t.mode === 'penjual');
+      const filterTanggal = document.getElementById('seller_filter_tanggal').value;
+      const rawProfit = localStorage.getItem(PROFIT_STORAGE_KEY);
+      const profitDb = rawProfit ? JSON.parse(rawProfit) : {};
+
+      let totalBiayaTrans = 0;
+      let penjualan = 0;
+      let biayaOperasional = 0;
+      let countTransaksi = 0;
+
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+
+      const inputBoxPenjualan = document.getElementById('seller_penjualan').value;
+      const inputBoxOperasional = document.getElementById('seller_biaya_operasional').value;
+      const inputPenjualan = parseFloat(inputBoxPenjualan) || 0;
+      const inputOperasional = parseFloat(inputBoxOperasional) || 0;
+
+      if (filterTanggal && filterTanggal !== '') {
+        transactions.forEach(t => {
+          if (t.tanggal === filterTanggal) {
+            totalBiayaTrans += parseInt(t.harga || 0);
+            countTransaksi++;
+          }
+        });
+        penjualan = inputPenjualan;
+        biayaOperasional = inputOperasional;
+
+      } else {
+        if (currentFilter === 'harian') {
+          transactions.forEach(t => {
+            if (t.tanggal) {
+              const tDate = new Date(t.tanggal + 'T00:00:00');
+              if (tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth && tDate.getDate() === currentDate) {
+                totalBiayaTrans += parseInt(t.harga || 0);
+                countTransaksi++;
+              }
+            }
+          });
+
+          let dbPenjualan = 0;
+          let dbOperasional = 0;
+          Object.keys(profitDb).forEach(key => {
+            if (key.startsWith('profit_')) {
+              const dateStr = key.replace('profit_', '');
+              const pDate = new Date(dateStr + 'T00:00:00');
+              if (pDate.getFullYear() === currentYear && pDate.getMonth() === currentMonth && pDate.getDate() === currentDate) {
+                dbPenjualan += profitDb[key].penjualan || 0;
+                dbOperasional += profitDb[key].operasional || 0;
+              }
+            }
+          });
+
+          penjualan = inputBoxPenjualan !== '' ? inputPenjualan : dbPenjualan;
+          biayaOperasional = inputBoxOperasional !== '' ? inputOperasional : dbOperasional;
+
+        } else if (currentFilter === 'mingguan') {
+          transactions.forEach(t => {
+            const tDate = new Date(t.tanggal + 'T00:00:00');
+            if (tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth) {
+              totalBiayaTrans += parseInt(t.harga || 0);
+              countTransaksi++;
+            }
+          });
+          Object.keys(profitDb).forEach(key => {
+            if (key.startsWith('profit_')) {
+              const dateStr = key.replace('profit_', '');
+              const pDate = new Date(dateStr + 'T00:00:00');
+              if (pDate.getFullYear() === currentYear && pDate.getMonth() === currentMonth) {
+                penjualan += profitDb[key].penjualan || 0;
+                biayaOperasional += profitDb[key].operasional || 0;
+              }
+            }
+          });
+        } else if (currentFilter === 'bulanan') {
+          transactions.forEach(t => {
+            const tDate = new Date(t.tanggal + 'T00:00:00');
+            if (tDate.getFullYear() === currentYear) {
+              totalBiayaTrans += parseInt(t.harga || 0);
+              countTransaksi++;
+            }
+          });
+          Object.keys(profitDb).forEach(key => {
+            if (key.startsWith('profit_')) {
+              const dateStr = key.replace('profit_', '');
+              const pDate = new Date(dateStr + 'T00:00:00');
+              if (pDate.getFullYear() === currentYear) {
+                penjualan += profitDb[key].penjualan || 0;
+                biayaOperasional += profitDb[key].operasional || 0;
+              }
+            }
+          });
+        }
+      }
+
+      const totalBiaya = totalBiayaTrans + biayaOperasional;
+      const labaKotor = penjualan - totalBiayaTrans;
+      const labaBersih = penjualan - totalBiaya;
+      const margin = penjualan > 0 ? ((labaBersih / penjualan) * 100).toFixed(1) : 0;
+
+      document.getElementById('res_penghasilan_kotor').innerHTML = `
+        ${formatRp(penjualan)}
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;">
+          Total pendapatan penjualan
+        </div>
+      `;
+
+      document.getElementById('res_total_biaya').innerHTML = `
+        ${formatRp(totalBiayaTrans)}
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;">
+          Total dari ${countTransaksi} transaksi
+        </div>
+      `;
+
+      document.getElementById('res_biaya_operasional').innerHTML = `
+        ${formatRp(biayaOperasional)}
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;">
+          Listrik, sewa, dll
+        </div>
+      `;
+
+      document.getElementById('res_laba_kotor').innerHTML = `
+        ${formatRp(labaKotor)}
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;">
+          Penjualan - Total Biaya Transaksi
+        </div>
+      `;
+
+      document.getElementById('res_laba_bersih').innerHTML = `
+        ${formatRp(labaBersih)}
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;">
+          Laba Kotor - Biaya Operasional
+        </div>
+      `;
+
+      document.getElementById('res_margin').innerText = `Margin ${margin}%`;
+      document.getElementById('profit_bar').style.width = `${Math.min(Math.max(margin, 0), 100)}%`;
+
+      renderSellerChart();
+      updateDistribusiPenjualWrapper();
+      updateTopSummaryPenjual();
+
+      if (typeof feather !== 'undefined') {
+        feather.replace();
+      }
+    }
+
+    // ============================
+    // PERHITUNGAN PEMBELI (RUMAH TANGGA)
+    // ============================
+    function hitungPembeli() {
+      const allTransactions = getAllTransactions();
+      const transactions = allTransactions.filter(t => t.mode === 'pembeli');
+      const targetTransactions = getFilteredTransactions(allTransactions).filter(t => t.mode === 'pembeli');
+
+      const totalBelanjaDariTransaksi = targetTransactions.reduce((sum, t) => sum + parseInt(t.harga || 0), 0);
+
+      const budgetBulanan = parseFloat(document.getElementById('buyer_budget').value) || 0;
+      const targetTabung = parseFloat(document.getElementById('buyer_target_tabung').value) || 0;
+      const totalBelanjaManual = parseFloat(document.getElementById('buyer_total_belanja').value) || 0;
+
+      const targetBudget = budgetBulanan;
+      const totalBelanja = totalBelanjaManual + totalBelanjaDariTransaksi;
+      const sisaBudget = targetBudget - totalBelanja;
+      const maxTabung = sisaBudget > 0 ? sisaBudget : 0;
+
+      const presentaseTerpakai = targetBudget > 0 ? ((totalBelanja / targetBudget) * 100).toFixed(1) : (totalBelanja > 0 ? 100 : 0);
+      const isOverBudget = parseFloat(presentaseTerpakai) >= 100;
+      const isWarning = parseFloat(presentaseTerpakai) >= 80 && parseFloat(presentaseTerpakai) < 100;
+
+      let periodLabel = '';
+      if (currentFilter === 'harian') {
+        periodLabel = 'Total Belanja Hari Ini';
+      } else if (currentFilter === 'mingguan') {
+        periodLabel = 'Total Belanja Minggu Ini';
+      } else {
+        periodLabel = 'Total Belanja Bulan Ini';
+      }
+
+      const breakdownHtml = `
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;line-height:1.5;">
+          ${periodLabel}<br>
+          Budget Bulanan: ${formatRp(targetBudget)}
+          ${totalBelanjaManual > 0 ? `<br>Manual: ${formatRp(totalBelanjaManual)}` : ''}
+          ${totalBelanjaDariTransaksi > 0 ? `<br>Transaksi: ${formatRp(totalBelanjaDariTransaksi)}` : ''}
+          ${totalBelanjaManual === 0 && totalBelanjaDariTransaksi === 0 ? '<br>Belum ada pengeluaran' : ''}
+        </div>
+      `;
+
+      document.getElementById('res_belanja_pembeli').innerHTML = `
+        ${formatRp(totalBelanja)}
+        ${breakdownHtml}
+      `;
+
+      const sisaLabel = isOverBudget
+        ? `<span style="color:#ef4444;">Melampaui Budget!</span>`
+        : 'Sisa Budget Bulanan';
+
+      document.getElementById('res_sisa_pembeli').innerHTML = `
+        ${formatRp(sisaBudget)}
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;">
+          ${sisaLabel}
+        </div>
+      `;
+
+      document.getElementById('res_tabung_pembeli').innerHTML = `
+        ${formatRp(maxTabung)}
+        <div style="font-size:11px;color:#64748b;font-weight:400;margin-top:4px;">
+          ${isOverBudget ? 'Budget habis' : 'Perkiraan Bisa Ditabung'}
+        </div>
+      `;
+
+      const budgetBar = document.getElementById('budget_bar');
+      const displayPercentage = Math.min(parseFloat(presentaseTerpakai), 150);
+      budgetBar.style.width = `${Math.min(displayPercentage, 100)}%`;
+      budgetBar.className = 'budget-bar-fill';
+
+      if (isOverBudget) {
+        budgetBar.classList.add('danger');
+        budgetBar.style.backgroundImage = 'repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.3) 5px, rgba(255,255,255,0.3) 10px)';
+      } else if (isWarning) {
+        budgetBar.classList.add('warning');
+      }
+
+      let usedPctLabel = `${presentaseTerpakai}% terpakai`;
+      if (isOverBudget) {
+        usedPctLabel = `🚨 ${presentaseTerpakai}% (OVER!)`;
+      } else if (isWarning) {
+        usedPctLabel = `⚠️ ${presentaseTerpakai}% terpakai`;
+      }
+      document.getElementById('budget_used_pct').innerText = usedPctLabel;
+      document.getElementById('budget_remaining').innerText = `${formatRp(Math.max(sisaBudget, 0))} sisa`;
+
+      const displaySisa = Math.max(sisaBudget, 0);
+      document.getElementById('top_total_pembeli').innerText = formatRp(displaySisa);
+
+      const summaryTrend = document.querySelector('#section_pembeli .summary-trend');
+      if (summaryTrend) {
+        if (budgetBulanan === 0) {
+          summaryTrend.innerHTML = `<i data-feather="info" style="width:14px; height:14px;"></i> Masukkan budget bulanan`;
+          summaryTrend.classList.remove('positive');
+        } else {
+          summaryTrend.innerHTML = `<i data-feather="trending-up" style="width:14px; height:14px;"></i> Bisa ditabung: ${formatRp(maxTabung)}`;
+          summaryTrend.classList.add('positive');
+        }
+      }
+
+      const alarmWarning = document.getElementById('alarm_warning_buyer');
+      if (isOverBudget) {
+        alarmWarning.classList.add('show');
+        document.getElementById('alarm_message_buyer').innerHTML = `🚨 Budget MELAMPAUI batas ${presentaseTerpakai}%! Sisa: ${formatRp(sisaBudget)}`;
+      } else if (isWarning) {
+        alarmWarning.classList.add('show');
+        document.getElementById('alarm_message_buyer').innerHTML = `⚠️ Budget Anda sudah tercapai ${presentaseTerpakai}%!`;
+      } else {
+        alarmWarning.classList.remove('show');
+      }
+
+      renderBuyerChart();
+      updateDistribusiBelanja(targetTransactions);
+      feather.replace();
+    }
+
+    function updateDistribusiBelanja(transactions) {
+      const container = document.getElementById('dist_pembeli');
+      if (!container) return;
+
+      const allCategories = [...new Set(transactions.map(t => t.kategori).filter(Boolean))];
+      const kategoriTotals = {};
+      allCategories.forEach(k => kategoriTotals[k] = 0);
+
+      transactions.forEach(t => {
+        if (t.kategori) {
+          kategoriTotals[t.kategori] = (kategoriTotals[t.kategori] || 0) + parseInt(t.harga || 0);
+        }
+      });
+
+      const total = Object.values(kategoriTotals).reduce((a, b) => a + b, 0);
+      const colors = ['#10b981', '#3b82f6', '#6366f1', '#f97316', '#8b5cf6', '#ec4899', '#14b8a6', '#f43f5e'];
+      let html = '';
+      let i = 0;
+
+      if (total === 0) {
+        html = '<p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>';
+      } else {
+        Object.keys(kategoriTotals).forEach(kategori => {
+          const val = kategoriTotals[kategori];
+          if (val > 0) {
+            const rawPct = (val / total) * 100;
+            const pct = rawPct < 1 && rawPct > 0 ? 1 : parseFloat(rawPct.toFixed(1));
+            html += `
+              <div class="dist-item">
+                <div class="dist-header"><span>${kategori}</span><span>${pct}%</span></div>
+                <div class="dist-bar-bg">
+                  <div class="dist-bar-fill" style="width: ${pct}%; background-color: ${colors[i % colors.length]};"></div>
+                </div>
+              </div>
+            `;
+          }
+          i++;
+        });
+      }
+
+      container.innerHTML = html === '' ? '<p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>' : html;
+    }
+
+    function updateDistribusiPenjual(transactions) {
+      const container = document.getElementById('dist_penjual');
+      if (!container) return;
+
+      const allCategories = [...new Set(transactions.map(t => t.kategori).filter(Boolean))];
+      const kategoriTotals = {};
+      allCategories.forEach(k => kategoriTotals[k] = 0);
+
+      transactions.forEach(t => {
+        if (t.kategori) {
+          kategoriTotals[t.kategori] = (kategoriTotals[t.kategori] || 0) + parseInt(t.harga || 0);
+        }
+      });
+
+      const total = Object.values(kategoriTotals).reduce((a, b) => a + b, 0);
+      const colors = ['#10b981', '#3b82f6', '#6366f1', '#f97316', '#8b5cf6', '#ec4899', '#14b8a6', '#f43f5e'];
+      let html = '';
+      let i = 0;
+
+      if (total === 0) {
+        html = '<p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>';
+      } else {
+        Object.keys(kategoriTotals).forEach(kategori => {
+          const val = kategoriTotals[kategori];
+          if (val > 0) {
+            const rawPct = (val / total) * 100;
+            const pct = rawPct < 1 && rawPct > 0 ? 1 : parseFloat(rawPct.toFixed(1));
+            html += `
+              <div class="dist-item">
+                <div class="dist-header"><span>${kategori}</span><span>${pct}%</span></div>
+                <div class="dist-bar-bg">
+                  <div class="dist-bar-fill" style="width: ${pct}%; background-color: ${colors[i % colors.length]};"></div>
+                </div>
+              </div>
+            `;
+          }
+          i++;
+        });
+      }
+
+      container.innerHTML = html === '' ? '<p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>' : html;
+    }
+
+    // ============================
+    // CHARTS LOGIC
+    // ============================
+    let sellerChart = null;
+    let buyerChart = null;
+
+    function renderSellerChart() {
+      const ctx = document.getElementById('sellerChart');
+      const placeholder = document.getElementById('chart_seller_placeholder');
+      if (!ctx) return;
+
+      const allTrans = getAllTransactions().filter(t => t.mode === 'penjual');
+      const rawProfit = localStorage.getItem(PROFIT_STORAGE_KEY);
+      const profitDb = rawProfit ? JSON.parse(rawProfit) : {};
+
+      const filterTanggal = document.getElementById('seller_filter_tanggal').value;
+      const bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+      let labels = [];
+      let costData = [];
+      let profitData = [];
+
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+
+      if (filterTanggal && filterTanggal !== '') {
+        const fd = new Date(filterTanggal + 'T00:00:00');
+        labels = [`${fd.getDate()} ${bulan[fd.getMonth()]}`];
+
+        const tCost = allTrans.filter(t => t.tanggal === filterTanggal).reduce((sum, t) => sum + parseInt(t.harga || 0), 0);
+        const pData = profitDb[`profit_${filterTanggal}`] || { penjualan: 0, operasional: 0 };
+
+        costData = [tCost];
+        profitData = [Math.max(pData.penjualan - tCost - pData.operasional, 0)];
+      }
+      else {
+        if (currentFilter === 'harian') {
+          const targetDateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+          labels = [`${now.getDate()} ${bulan[currentMonth]}`];
+
+          const tCost = allTrans.filter(t => t.tanggal === targetDateStr).reduce((sum, t) => sum + parseInt(t.harga || 0), 0);
+          const pData = profitDb[`profit_${targetDateStr}`] || { penjualan: 0, operasional: 0 };
+
+          costData = [tCost];
+          profitData = [Math.max(pData.penjualan - tCost - pData.operasional, 0)];
+        }
+        else if (currentFilter === 'mingguan') {
+          const weekDates = [7, 14, 21, 28];
+          labels = weekDates.map(d => `${d} ${bulan[currentMonth]}`);
+
+          let weeklyCosts = [0, 0, 0, 0];
+          let weeklyPenjualan = [0, 0, 0, 0];
+          let weeklyOperasional = [0, 0, 0, 0];
+
+          allTrans.forEach(t => {
+            const tDate = new Date(t.tanggal + 'T00:00:00');
+            if (tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth) {
+              const wIdx = Math.min(Math.floor((tDate.getDate() - 1) / 7), 3);
+              weeklyCosts[wIdx] += parseInt(t.harga || 0);
+            }
+          });
+
+          Object.keys(profitDb).forEach(key => {
+            if (key.startsWith('profit_')) {
+              const dateStr = key.replace('profit_', '');
+              const pDate = new Date(dateStr + 'T00:00:00');
+              if (pDate.getFullYear() === currentYear && pDate.getMonth() === currentMonth) {
+                const wIdx = Math.min(Math.floor((pDate.getDate() - 1) / 7), 3);
+                weeklyPenjualan[wIdx] += profitDb[key].penjualan || 0;
+                weeklyOperasional[wIdx] += profitDb[key].operasional || 0;
+              }
+            }
+          });
+
+          costData = weeklyCosts;
+          profitData = [0, 1, 2, 3].map(i => Math.max(weeklyPenjualan[i] - weeklyCosts[i] - weeklyOperasional[i], 0));
+        }
+        else if (currentFilter === 'bulanan') {
+          labels = bulan;
+          let monthlyCosts = Array(12).fill(0);
+          let monthlyPenjualan = Array(12).fill(0);
+          let monthlyOperasional = Array(12).fill(0);
+
+          allTrans.forEach(t => {
+            const tDate = new Date(t.tanggal + 'T00:00:00');
+            if (tDate.getFullYear() === currentYear) {
+              monthlyCosts[tDate.getMonth()] += parseInt(t.harga || 0);
+            }
+          });
+
+          Object.keys(profitDb).forEach(key => {
+            if (key.startsWith('profit_')) {
+              const dateStr = key.replace('profit_', '');
+              const pDate = new Date(dateStr + 'T00:00:00');
+              if (pDate.getFullYear() === currentYear) {
+                monthlyPenjualan[pDate.getMonth()] += profitDb[key].penjualan || 0;
+                monthlyOperasional[pDate.getMonth()] += profitDb[key].operasional || 0;
+              }
+            }
+          });
+
+          costData = monthlyCosts;
+          profitData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => Math.max(monthlyPenjualan[i] - monthlyCosts[i] - monthlyOperasional[i], 0));
+        }
+      }
+
+      const totalCost = costData.reduce((a, b) => a + b, 0);
+      const totalProfit = profitData.reduce((a, b) => a + b, 0);
+      const hasData = totalCost > 0 || totalProfit > 0;
+
+      if (placeholder) placeholder.style.display = hasData ? 'none' : 'flex';
+      ctx.style.display = hasData ? 'block' : 'none';
+
+      if (!hasData) {
+        if (sellerChart) { sellerChart.destroy(); sellerChart = null; }
+        return;
+      }
+
+      const ctx2d = ctx.getContext('2d');
+      if (sellerChart) sellerChart.destroy();
+
+      sellerChart = new Chart(ctx2d, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'Biaya', data: costData, backgroundColor: '#f97316', borderRadius: 4, barPercentage: 0.6 },
+            { label: 'Profit', data: profitData, backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.6 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 20, font: { family: 'Inter', size: 12 } } } },
+          scales: { y: { display: false }, x: { grid: { display: false }, border: { display: false } } }
+        }
+      });
+    }
+
+    function renderBuyerChart() {
+      const ctx = document.getElementById('buyerChart');
+      if (!ctx) return;
+
+      if (buyerChart) {
+        buyerChart.destroy();
+        buyerChart = null;
+      }
+
+      const chartContainer = ctx.parentElement;
+      const oldPlaceholder = chartContainer.querySelector('.chart-placeholder');
+      if (oldPlaceholder) oldPlaceholder.remove();
+
+      const transactionsAll = getAllTransactions();
+      const budget = parseFloat(document.getElementById('buyer_budget').value) || 0;
+      const bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+
+      let labels = [];
+      let budgetData = [];
+      let spentData = [];
+      let remainingData = [];
+
+      const buyerTrans = transactionsAll.filter(t => t.mode === 'pembeli');
+
+      if (currentFilter === 'harian') {
+        const todayLabel = `${currentDate} ${bulan[currentMonth]}`;
+        labels = [todayLabel];
+        const todayStrLocal = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
+        const todaySpent = buyerTrans.filter(t => t.tanggal === todayStrLocal).reduce((sum, t) => sum + parseInt(t.harga || 0), 0);
+        budgetData = [budget];
+        spentData = [todaySpent];
+        remainingData = [Math.max(budget - todaySpent, 0)];
+
+      } else if (currentFilter === 'mingguan') {
+        const weekLabels = ['Mg 1 (1-7)', 'Mg 2 (8-14)', 'Mg 3 (15-21)', 'Mg 4 (22-31)'];
+        const weeklySpent = [0, 0, 0, 0];
+
+        buyerTrans.forEach(t => {
+          const tDate = new Date(t.tanggal + 'T00:00:00');
+          if (tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth) {
+            const day = tDate.getDate();
+            if (day >= 1 && day <= 7) weeklySpent[0] += parseInt(t.harga || 0);
+            else if (day >= 8 && day <= 14) weeklySpent[1] += parseInt(t.harga || 0);
+            else if (day >= 15 && day <= 21) weeklySpent[2] += parseInt(t.harga || 0);
+            else if (day >= 22 && day <= 31) weeklySpent[3] += parseInt(t.harga || 0);
+          }
+        });
+
+        labels = [];
+        spentData = [];
+        weeklySpent.forEach((spent, i) => {
+          if (spent > 0) {
+            labels.push(weekLabels[i]);
+            spentData.push(spent);
+          }
+        });
+
+        if (labels.length === 0) {
+          labels = weekLabels;
+          spentData = weeklySpent;
+        }
+
+        budgetData = spentData.map(() => budget);
+        remainingData = spentData.map(spent => Math.max(budget - spent, 0));
+
+      } else {
+        const monthlySpent = Array(12).fill(0);
+
+        buyerTrans.forEach(t => {
+          const tDate = new Date(t.tanggal + 'T00:00:00');
+          if (tDate.getFullYear() === currentYear) {
+            monthlySpent[tDate.getMonth()] += parseInt(t.harga || 0);
+          }
+        });
+
+        const filteredLabels = [];
+        const filteredSpent = [];
+        monthlySpent.forEach((spent, i) => {
+          if (spent > 0) {
+            filteredLabels.push(bulan[i]);
+            filteredSpent.push(spent);
+          }
+        });
+
+        if (filteredLabels.length === 0) {
+          labels = bulan;
+          spentData = monthlySpent;
+        } else {
+          labels = filteredLabels;
+          spentData = filteredSpent;
+        }
+
+        budgetData = spentData.map(() => budget);
+        remainingData = spentData.map(spent => Math.max(budget - spent, 0));
+      }
+
+      const totalSpent = spentData.reduce((a, b) => a + b, 0);
+      const hasData = budget > 0 || totalSpent > 0;
+
+      ctx.style.display = hasData ? 'block' : 'none';
+
+      if (!hasData) return;
+
+      const ctx2d = ctx.getContext('2d');
+      const isMobile = window.innerWidth <= 768;
+
+      buyerChart = new Chart(ctx2d, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: isMobile ? 'Budget' : 'Target Anggaran', data: budgetData, backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.6 },
+            { label: isMobile ? 'Belanja' : 'Total Pengeluaran', data: spentData, backgroundColor: '#f97316', borderRadius: 4, barPercentage: 0.6 },
+            { label: isMobile ? 'Sisa' : 'Sisa Anggaran', data: remainingData, backgroundColor: '#6366f1', borderRadius: 4, barPercentage: 0.6 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 20, font: { family: 'Inter', size: 12 } } } },
+          scales: { y: { display: false }, x: { grid: { display: false }, border: { display: false } } }
+        }
+      });
+    }
+
+    // ============================
+    // EDIT & DELETE RIWAYAT
+    // ============================
+    let editingRow = null;
+    let editingId = null;
+
+    function formatTanggalDisplay(iso) {
+      if (!iso) return '-';
+      const bln = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      const d = new Date(iso + 'T00:00:00');
+      return d.getDate() + ' ' + bln[d.getMonth()];
+    }
+
+    function editRow(btn) {
+      const tr = btn.closest('tr');
+      if (editingRow && editingRow !== tr) editingRow.classList.remove('row-editing');
+      editingRow = tr;
+      tr.classList.add('row-editing');
+
+      document.getElementById('inp_nama').value = tr.dataset.nama || '';
+      document.getElementById('inp_kategori').value = tr.dataset.kategori || '';
+      document.getElementById('inp_jumlah').value = tr.dataset.jumlah || '';
+      document.getElementById('inp_harga').value = tr.dataset.harga || '';
+      document.getElementById('inp_merchant').value = tr.dataset.merchant || '';
+      document.getElementById('inp_tanggal').value = tr.dataset.tanggal || '';
+      document.getElementById('inp_catatan').value = tr.dataset.catatan || '';
+
+      document.getElementById('title_catat').innerText = 'Edit Transaksi';
+      document.getElementById('btn_simpan').innerText = 'Update Transaksi';
+      document.getElementById('btn_batal').style.display = 'inline-block';
+      document.getElementById('card_catat_transaksi').classList.add('mode-edit');
+
+      editingId = tr.dataset.id;
+      document.getElementById('card_catat_transaksi').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function deleteRow(btn) {
+      const tr = btn.closest('tr');
+      if (editingRow === tr) batalEdit();
+
+      const transactions = getAllTransactions();
+      const idToDelete = tr.dataset.id;
+      const filtered = transactions.filter(t => t.id !== idToDelete);
+      saveTransactions(filtered);
+
+      tr.remove();
+
+      if (currentMode === 'penjual') {
+        renderSellerChart();
+        hitungPenjual();
+      } else {
+        renderBuyerChart();
+        hitungPembeli();
+      }
+      renderRiwayatTransaksi();
+    }
+
+    function batalEdit() {
+      if (editingRow) {
+        editingRow.classList.remove('row-editing');
+        editingRow = null;
+      }
+      editingId = null;
+      resetForm();
+    }
+
+    function resetForm() {
+      document.getElementById('inp_nama').value = '';
+      document.getElementById('inp_kategori').value = '';
+      document.getElementById('inp_jumlah').value = '';
+      document.getElementById('inp_harga').value = '';
+      document.getElementById('inp_merchant').value = '';
+      document.getElementById('inp_tanggal').valueAsDate = new Date();
+      document.getElementById('inp_catatan').value = '';
+
+      document.getElementById('title_catat').innerText = currentMode === 'penjual' ? 'Catat Transaksi Penjualan' : 'Catat Transaksi Belanja';
+      document.getElementById('btn_simpan').innerText = 'Simpan Transaksi';
+      document.getElementById('btn_batal').style.display = 'none';
+      document.getElementById('card_catat_transaksi').classList.remove('mode-edit');
+    }
+
+    function simpanTransaksi() {
+      const nama = document.getElementById('inp_nama').value.trim();
+      const kategori = document.getElementById('inp_kategori').value;
+      const jumlah = document.getElementById('inp_jumlah').value;
+      const harga = document.getElementById('inp_harga').value;
+      const merchant = document.getElementById('inp_merchant').value.trim();
+      const tanggal = document.getElementById('inp_tanggal').value;
+      const catatan = document.getElementById('inp_catatan').value;
+
+      if (!nama || !kategori || !harga || !tanggal) {
+        alert('Mohon lengkapi data: Nama, Kategori, Harga, dan Tanggal wajib diisi!');
+        return;
+      }
+
+      const hargaNum = parseInt(harga) || 0;
+      const isOver = hargaNum > 500000;
+
+      if (editingId) {
+        const transactions = getAllTransactions();
+        const idx = transactions.findIndex(t => t.id === editingId);
+
+        if (idx !== -1) {
+          transactions[idx] = {
+            ...transactions[idx],
+            nama, kategori, jumlah, harga: hargaNum, merchant, tanggal, catatan
+          };
+          saveTransactions(transactions);
+        }
+
+        const tr = editingRow;
+        const cells = tr.cells;
+
+        cells[0].innerText = formatTanggalDisplay(tanggal);
+        cells[1].innerText = nama;
+        cells[2].innerText = merchant;
+        cells[3].innerText = kategori;
+        cells[4].innerHTML = isOver
+          ? `<span style="color:#ef4444;font-weight:600;">Rp ${hargaNum.toLocaleString('id-ID')}</span>`
+          : `Rp ${hargaNum.toLocaleString('id-ID')}`;
+        cells[5].innerHTML = isOver ? `<span class="badge-over">Over</span>` : `<span class="badge-aman">Aman</span>`;
+
+        tr.dataset.nama = nama;
+        tr.dataset.kategori = kategori;
+        tr.dataset.jumlah = jumlah;
+        tr.dataset.harga = harga;
+        tr.dataset.merchant = merchant;
+        tr.dataset.tanggal = tanggal;
+        tr.dataset.catatan = catatan;
+        tr.dataset.status = isOver ? 'Over' : 'Aman';
+
+      } else {
+        const newTransaction = {
+          id: generateId(),
+          nama, kategori, jumlah, harga: hargaNum, merchant, tanggal, catatan,
+          mode: currentMode,
+          createdAt: new Date().toISOString()
+        };
+
+        const transactions = getAllTransactions();
+        transactions.unshift(newTransaction);
+        saveTransactions(transactions);
+
+        addTransactionRow(newTransaction);
+      }
+
+      editingRow = null;
+      editingId = null;
+      resetForm();
+
+      if (currentMode === 'penjual') {
+        renderSellerChart();
+        hitungPenjual();
+      } else {
+        renderBuyerChart();
+        hitungPembeli();
+      }
+    }
+
+    function addTransactionRow(t) {
+      const tbody = document.querySelector('#tabel_riwayat tbody');
+      const isOver = t.harga > 500000;
+
+      const emptyRow = tbody.querySelector('tr td[colspan="7"]');
+      if (emptyRow) tbody.innerHTML = '';
+
+      const tr = document.createElement('tr');
+      tr.dataset.id = t.id;
+      tr.dataset.nama = t.nama;
+      tr.dataset.kategori = t.kategori;
+      tr.dataset.jumlah = t.jumlah || '';
+      tr.dataset.harga = t.harga;
+      tr.dataset.merchant = t.merchant;
+      tr.dataset.tanggal = t.tanggal;
+      tr.dataset.catatan = t.catatan || '';
+      tr.dataset.status = isOver ? 'Over' : 'Aman';
+      tr.dataset.mode = t.mode || 'pembeli';
+
+      tr.innerHTML = `
+        <td>${formatTanggalDisplay(t.tanggal)}</td>
+        <td>${t.nama}</td>
+        <td>${t.merchant || '-'}</td>
+        <td>${t.kategori}</td>
+        <td>${isOver ? `<span style="color:#ef4444;font-weight:600;">Rp ${t.harga.toLocaleString('id-ID')}</span>` : `Rp ${t.harga.toLocaleString('id-ID')}`}</td>
+        <td>${isOver ? `<span class="badge-over">Over</span>` : `<span class="badge-aman">Aman</span>`}</td>
+        <td>
+          <div class="td-aksi">
+            <button class="btn-aksi btn-edit" onclick="editRow(this)">✏️ Edit</button>
+            <button class="btn-aksi btn-delete" onclick="deleteRow(this)">❌ Hapus</button>
+          </div>
+        </td>
+      `;
+
+      tbody.insertBefore(tr, tbody.firstChild);
+    }
+
+    function renderRiwayatTransaksi() {
+      const transactions = getAllTransactions();
+      const filtered = transactions.filter(t => t.mode === currentMode);
+      const tbody = document.querySelector('#tabel_riwayat tbody');
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        const modeLabel = currentMode === 'penjual' ? 'penjualan' : 'belanja';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center;color:#64748b;padding:40px;">
+              Belum ada transaksi ${modeLabel}.<br>
+              <small>Catat transaksi pertama Anda!</small>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+      filtered.forEach(t => addTransactionRow(t));
+    }
+
+    // ============================
+    // INITIALIZATION
+    // ============================
+    document.addEventListener('DOMContentLoaded', function () {
+      renderRiwayatTransaksi();
+      muatProfitData();
+      muatBuyerData();
+
+      hitungPenjual();
+      hitungPembeli();
+
+      renderSellerChart();
+      updateKategoriOptions();
+      updateBuyerPeriodIndicator();
+
+      document.querySelectorAll('.time-toggle button').forEach((btn, idx) => {
+        const filters = ['harian', 'mingguan', 'bulanan'];
+        btn.onclick = function () {
+          setTimeFilter(filters[idx]);
+        };
+      });
+
+      const filters = ['harian', 'mingguan', 'bulanan'];
+      document.querySelectorAll('.time-toggle button').forEach((btn, idx) => {
+        btn.classList.toggle('active', filters[idx] === currentFilter);
+      });
+
+      document.getElementById('inp_tanggal').valueAsDate = new Date();
+    });
+
+    window.addEventListener('resize', function () {
+      if (currentMode === 'penjual') {
+        renderSellerChart();
+      } else {
+        renderBuyerChart();
+      }
+    });
+  </script>
+</body>
+
+</html>

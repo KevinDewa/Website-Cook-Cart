@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Detail Resep - Rendang Daging Sapi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Palet Warna Cook&Cart */
+      --brand-dark: #006C45;
+      --brand-primary: #00A859;
+      --brand-light: #E8F5EE;
+      --text-dark: #1A1A1A;
+      --text-gray: #4B5563;
+      --text-light: #9CA3AF;
+      --border-color: #E5E7EB;
+      --bg-body: #FFFFFF;
+      --bg-main: #F4F6F8;
+      --tips-bg: #FFEDD5;
+      --tips-border: #FDBA74;
+      --tips-text: #C2410C;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      color: var(--text-dark);
+      background-color: var(--bg-body);
+      overflow-x: hidden;
+    }
+
+    /* ============================
+       1. MAIN NAV (RESPONSIVE)
+       ============================ */
+    .main-nav {
+      width: 260px;
+      background-color: var(--bg-body);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 900;
+    }
+
+    .nav-brand {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--brand-dark);
+      text-decoration: none;
+      margin-bottom: 48px;
+      padding-left: 12px;
+      letter-spacing: -0.5px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text-gray);
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+    }
+
+    .nav-item.active {
+      background-color: var(--brand-light);
+      color: var(--brand-dark);
+      font-weight: 600;
+    }
+
+    .nav-item .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+    }
+
+    .nav-item img.icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .text-mobile {
+      display: none;
+    }
+
+    /* ============================
+       2. AREA KONTEN UTAMA
+       ============================ */
+    .main-content {
+      flex: 1;
+      background-color: var(--bg-main);
+      overflow-y: auto;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* --- HERO SECTION --- */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 480px;
+    }
+
+    .hero-bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-back {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+      width: 44px;
+      height: 44px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background-color: white;
+      transform: scale(1.05);
+    }
+
+    .btn-back img.icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .hero-glass-panel {
+      position: absolute;
+      bottom: 32px;
+      left: 32px;
+      right: 32px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tag-pill {
+      background: white;
+      color: var(--text-dark);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .meta-item img.icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-add-plan {
+      background-color: var(--brand-primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-add-plan:hover {
+      background-color: var(--brand-dark);
+    }
+
+    .btn-action-icon {
+      background-color: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-icon:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* --- LAYOUT GRID BAWAH --- */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 32px;
+      padding: 32px;
+      align-items: start;
+    }
+
+    .card {
+      background-color: var(--bg-body);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    /* ============================
+       KOLOM KIRI: BAHAN 
+       ============================ */
+    .ingredient-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .ingredient-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .custom-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 6px;
+      background: white;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .custom-checkbox:checked {
+      background-color: var(--brand-primary);
+      border-color: var(--brand-primary);
+    }
+
+    .custom-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 4px;
+      height: 9px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .ingredient-text {
+      color: var(--text-gray);
+      line-height: 1.5;
+      transition: all 0.2s ease;
+    }
+
+    .custom-checkbox:checked+.ingredient-text {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+
+    /* ============================
+       KOLOM KANAN: CARA MEMBUAT
+       ============================ */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 10px;
+      bottom: 20px;
+      width: 2px;
+      background-color: var(--border-color);
+    }
+
+    .step-item {
+      position: relative;
+      padding-left: 32px;
+      margin-bottom: 32px;
+      display: block;
+      cursor: pointer;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-toggle {
+      display: none;
+    }
+
+    .step-dot {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: var(--border-color);
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    .step-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      color: var(--text-light);
+      transition: all 0.3s ease;
+    }
+
+    .step-desc {
+      font-size: 15px;
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .step-toggle:checked~.step-dot {
+      background-color: var(--brand-primary);
+      box-shadow: 0 0 0 4px var(--brand-light);
+    }
+
+    .step-toggle:checked~.step-content .step-title {
+      color: var(--brand-primary);
+    }
+
+    /* TIPS CHEF BOX */
+    .tips-card {
+      background-color: var(--tips-bg);
+      border: 1px solid var(--tips-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .tips-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .tips-content h4 {
+      color: var(--tips-text);
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .tips-content p {
+      color: #9A3412;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* KOMENTAR KOMUNITAS */
+    .comment-input-area {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .textarea-box {
+      flex: 1;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 14px;
+      min-height: 100px;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .btn-kirim-container {
+      text-align: right;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 32px;
+    }
+
+    .btn-kirim {
+      background-color: var(--brand-primary);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-kirim:hover {
+      background-color: var(--brand-dark);
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 16px;
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .comment-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .comment-text {
+      font-size: 14px;
+      color: var(--text-gray);
+      line-height: 1.5;
+    }
+
+    /* ============================
+       MEDIA QUERIES (RESPONSIVE)
+       ============================ */
+    @media (max-width: 1024px) {
+
+      /* Mengubah Sidebar menjadi Bottom Nav */
+      .main-nav {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        padding: 8px 4px;
+        flex-direction: row;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .nav-brand {
+        display: none;
+      }
+
+      .nav-links {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        gap: 4px;
+        flex: 1;
+        min-width: 55px;
+        background-color: transparent !important;
+        border-radius: 0;
+      }
+
+      .nav-item:hover {
+        background-color: transparent !important;
+      }
+
+      .nav-item.active {
+        color: var(--brand-dark);
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 14px;
+      }
+
+      .nav-item.active .icon-wrapper {
+        background-color: var(--brand-light);
+      }
+
+      .nav-item img.icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .nav-text {
+        font-size: 10px;
+        white-space: nowrap;
+      }
+
+      .text-desktop {
+        display: none;
+      }
+
+      .text-mobile {
+        display: inline;
+      }
+
+      /* Area Utama Konten */
+      body {
+        padding-bottom: 70px;
+      }
+
+      .main-content {
+        height: auto;
+        overflow-y: visible;
+      }
+
+      /* Grid responsif: Kolom bertumpuk */
+      .content-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        height: 400px;
+      }
+
+      .btn-back {
+        top: 24px;
+        left: 24px;
+      }
+
+      .hero-glass-panel {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        padding: 24px;
+      }
+
+      .hero-title {
+        font-size: 26px;
+        margin-bottom: 16px;
+      }
+
+      .hero-meta {
+        margin-bottom: 24px;
+      }
+
+      .content-grid {
+        padding: 16px;
+        gap: 16px;
+      }
+
+      .card,
+      .tips-card {
+        padding: 20px;
+        border-radius: 16px;
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 12px;
+      }
+
+      .nav-item img.icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .nav-text {
+        font-size: 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR TUNGGAL (BERUBAH SESUAI UKURAN LAYAR) -->
+  <nav class="main-nav">
+    <a href="#" class="nav-brand">Cook&Cart</a>
+    <div class="nav-links">
+      <a href="#" class="nav-item active">
+        <div class="icon-wrapper"><img src="img/detail_resep/IconJelajah.svg" alt="Jelajah" class="icon"></div>
+        <span class="nav-text">Jelajah</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="icon-wrapper"><img src="img/detail_resep/IconRencana.svg" alt="Rencana" class="icon"></div>
+        <span class="nav-text">Rencana</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="icon-wrapper"><img src="img/detail_resep/IconPDFRencana.svg" alt="PDF" class="icon"></div>
+        <span class="nav-text text-desktop">PDF Rencana</span>
+        <span class="nav-text text-mobile">PDF</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="icon-wrapper"><img src="img/detail_resep/IconPengeluaran.svg" alt="Pengeluaran" class="icon"></div>
+        <span class="nav-text text-desktop">Pengeluaran</span>
+        <span class="nav-text text-mobile">Biaya</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="icon-wrapper"><img src="img/detail_resep/IconUploadResep.svg" alt="Upload" class="icon"></div>
+        <span class="nav-text text-desktop">Upload Resep</span>
+        <span class="nav-text text-mobile">Upload</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="icon-wrapper"><img src="img/detail_resep/IconProfil.svg" alt="Profil" class="icon"></div>
+        <span class="nav-text">Profil</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <section class="hero-section">
+      <button class="btn-back"><img src="img/detail_resep/Iconback.svg" alt="Back" class="icon"></button>
+      <img src="img/detail_resep/Indonesian Beef Rendang.png" alt="Rendang" class="hero-bg">
+      <div class="hero-glass-panel">
+        <div class="hero-tags"><span class="tag-pill">MAKAN SIANG</span><span class="tag-pill">TINGGI PROTEIN</span>
+        </div>
+        <h1 class="hero-title">Rendang Daging Sapi</h1>
+        <div class="hero-meta">
+          <div class="meta-item"><img src="img/detail_resep/Iconwaktu.svg" alt="" class="icon"> 120 Mins</div>
+          <div class="meta-item"><img src="img/detail_resep/Iconportion.svg" alt="" class="icon"> 4 Portions</div>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-add-plan"><img src="img/detail_resep/Icontambah.svg" alt="" style="width: 16px;"> Tambah ke
+            Rencana</button>
+          <button class="btn-action-icon"><img src="img/detail_resep/Iconbookmark.svg" alt="Bookmark"
+              class="icon"></button>
+          <button class="btn-action-icon"><img src="img/detail_resep/Iconbagikan.svg" alt="Share" class="icon"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="left-col">
+        <div class="card">
+          <h3 class="card-title">Bahan-bahan</h3>
+          <label class="ingredient-item"><input type="checkbox" class="custom-checkbox"><span
+              class="ingredient-text">500g Daging Sapi (Has Dalam)</span></label>
+          <label class="ingredient-item"><input type="checkbox" class="custom-checkbox"><span class="ingredient-text">1
+              liter Santan Kental</span></label>
+          <label class="ingredient-item"><input type="checkbox" class="custom-checkbox"><span class="ingredient-text">2
+              batang Serai, memarkan</span></label>
+          <label class="ingredient-item"><input type="checkbox" class="custom-checkbox"><span class="ingredient-text">4
+              lembar Daun Jeruk</span></label>
+          <label class="ingredient-item"><input type="checkbox" class="custom-checkbox"><span class="ingredient-text">1
+              lembar Daun Kunyit</span></label>
+          <label class="ingredient-item"><input type="checkbox" class="custom-checkbox"><span class="ingredient-text">2
+              Asam Kandis</span></label>
+          <label class="ingredient-item"><input type="checkbox" class="custom-checkbox"><span
+              class="ingredient-text">Bumbu Halus (Bawang Merah, Putih, Cabai, Jahe, Lengkuas, Kunyit)</span></label>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="card">
+          <h3 class="card-title">Cara Membuat</h3>
+          <div class="timeline">
+
+            <label class="step-item">
+              <input type="radio" name="recipe-steps" class="step-toggle" checked>
+              <div class="step-dot"></div>
+              <div class="step-content">
+                <div class="step-title">LANGKAH 1</div>
+                <div class="step-desc">Tumis bumbu halus bersama serai, daun jeruk, daun kunyit, dan asam kandis hingga
+                  harum.</div>
+              </div>
+            </label>
+
+            <label class="step-item">
+              <input type="radio" name="recipe-steps" class="step-toggle">
+              <div class="step-dot"></div>
+              <div class="step-content">
+                <div class="step-title">LANGKAH 2</div>
+                <div class="step-desc">Masukkan daging sapi, aduk hingga berubah warna dan bumbu meresap.</div>
+              </div>
+            </label>
+
+            <label class="step-item">
+              <input type="radio" name="recipe-steps" class="step-toggle">
+              <div class="step-dot"></div>
+              <div class="step-content">
+                <div class="step-title">LANGKAH 3</div>
+                <div class="step-desc">Tuangkan santan, masak dengan api kecil sambil terus diaduk hingga santan
+                  mengental dan berminyak.</div>
+              </div>
+            </label>
+
+            <label class="step-item">
+              <input type="radio" name="recipe-steps" class="step-toggle">
+              <div class="step-dot"></div>
+              <div class="step-content">
+                <div class="step-title">LANGKAH 4</div>
+                <div class="step-desc">Masak terus hingga bumbu meresap sempurna dan berubah warna menjadi cokelat tua
+                  (rendang kering).</div>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <div class="tips-card">
+          <img src="img/detail_resep/IcontipsChef.svg" alt="Bulb" class="tips-icon">
+          <div class="tips-content">
+            <h4>Tips Chef</h4>
+            <p>Agar daging sapi empuk namun tidak mudah hancur saat diaduk berjam-jam, potong daging searah dengan
+              seratnya dan pastikan potongannya cukup tebal.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Komentar Komunitas</h3>
+          <div class="comment-input-area">
+            <img src="img/detail_resep/profil pengguna.png" alt="User" class="avatar">
+            <textarea class="textarea-box" placeholder="Bagikan pengalaman memasakmu..."></textarea>
+          </div>
+          <div class="btn-kirim-container"><button class="btn-kirim">Kirim</button></div>
+          <div class="comment-item">
+            <img src="img/detail_resep/profil komentator.png" alt="Budi" class="avatar">
+            <div class="comment-content">
+              <div class="comment-header">
+                <span class="comment-name">Budi Santoso</span><span class="comment-time">2 hari yang lalu</span>
+              </div>
+              <p class="comment-text">Rendangnya beneran otentik! Wangi rempahnya keluar banget. Keluarga di rumah suka
+                semua, tekstur dagingnya juga empuk banget kalau dimasak sesuai langkahnya.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+</body>
+
+</html>

@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rencana Menu Mingguan - Cook&Cart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Palet Warna Cook&Cart */
+      --brand-dark: #006C45;
+      --brand-primary: #00A859;
+      --brand-light: #E8F5EE;
+      --text-dark: #1A1A1A;
+      --text-gray: #4B5563;
+      --text-light: #9CA3AF;
+      --border-color: #E5E7EB;
+      --bg-body: #FFFFFF;
+      --bg-main: #F9FAFB;
+
+      /* Warna Label Waktu Makan */
+      --tag-breakfast: transparent;
+      --text-breakfast: #1D4ED8;
+      --tag-lunch: transparent;
+      --text-lunch: #B45309;
+      --tag-dinner: transparent;
+      --text-dinner: #6B21A8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      color: var(--text-dark);
+      background-color: var(--bg-body);
+      overflow-x: hidden;
+    }
+
+    /* ============================
+       1. MAIN NAV (RESPONSIVE)
+       ============================ */
+    .main-nav {
+      width: 260px;
+      background-color: var(--bg-body);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 900;
+    }
+
+    .nav-brand {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--brand-dark);
+      text-decoration: none;
+      margin-bottom: 48px;
+      padding-left: 12px;
+      letter-spacing: -0.5px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text-gray);
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item.active {
+      background-color: var(--brand-light);
+      color: var(--brand-dark);
+      font-weight: 600;
+    }
+
+    .nav-item .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+    }
+
+    .nav-item img.icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .text-mobile {
+      display: none;
+    }
+
+    /* ============================
+       2. AREA KONTEN UTAMA
+       ============================ */
+    .main-content {
+      flex: 1;
+      background-color: var(--bg-main);
+      padding: 40px 48px;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .header-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .header-title p {
+      font-size: 14px;
+      color: var(--text-gray);
+    }
+
+    /* --- WEEKLY GRID SYSTEM --- */
+    .weekly-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .day-card {
+      background-color: var(--bg-body);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: none;
+      border: 1px solid var(--border-color);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .day-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    /* SLOT WAKTU MAKAN */
+    .meal-slot {
+      margin-bottom: 16px;
+    }
+
+    .meal-slot:last-child {
+      margin-bottom: 0;
+    }
+
+    .meal-badge {
+      display: inline-block;
+      padding: 0;
+      border-radius: 0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .meal-slot.breakfast .meal-badge {
+      color: var(--text-breakfast);
+    }
+
+    .meal-slot.lunch .meal-badge {
+      color: var(--text-lunch);
+    }
+
+    .meal-slot.dinner .meal-badge {
+      color: var(--text-dinner);
+    }
+
+    /* SLOT KOSONG */
+    .meal-content-box.empty {
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 13px;
+      font-weight: 600;
+      gap: 6px;
+      transition: all 0.2s;
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    .meal-content-box.empty:hover {
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+      background-color: var(--brand-light);
+    }
+
+    .meal-content-box.empty img.icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+    }
+
+    .meal-content-box.empty:hover img.icon {
+      opacity: 1;
+      filter: sepia(100%) hue-rotate(90deg) saturate(300%);
+    }
+
+    /* --- KELAS BARU UNTUK KONDISI KOTAK TERISI --- */
+    .meal-content-box.filled {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      cursor: pointer;
+      background-color: var(--bg-body);
+      transition: all 0.2s;
+    }
+
+    .meal-content-box.filled:hover {
+      border-color: var(--brand-primary);
+    }
+
+    /* =======================================================
+       MODAL POP-UP
+       ======================================================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(17, 24, 39, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      padding: 24px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-container {
+      background-color: var(--bg-body);
+      width: 100%;
+      max-width: 600px;
+      border-radius: 16px;
+      box-shadow: 0px 12px 40px 0px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      max-height: 85vh;
+      transform: translateY(20px) scale(0.98);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active .modal-container {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Header Modal */
+    .modal-header {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+
+    .btn-close:hover {
+      color: var(--text-dark);
+    }
+
+    /* Area Search dan Filter Chips */
+    .modal-tools {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .input-search-wrapper {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0 16px;
+    }
+
+    .input-search-wrapper input {
+      width: 100%;
+      padding: 12px 0;
+      border: none;
+      background: none;
+      outline: none;
+      font-size: 14px;
+      color: var(--text-dark);
+      margin-left: 10px;
+    }
+
+    .modal-filters {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .modal-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-chip {
+      padding: 8px 16px;
+      border-radius: 50px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-body);
+      color: var(--text-gray);
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .filter-chip.active {
+      background-color: var(--brand-dark);
+      color: white;
+      border-color: var(--brand-dark);
+    }
+
+    /* Grid Resep (Card Horizontal) */
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .recipe-card {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .recipe-card:hover {
+      border-color: var(--brand-primary);
+    }
+
+    .recipe-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      background-color: #E5E7EB;
+      flex-shrink: 0;
+    }
+
+    .recipe-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .recipe-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .recipe-meta {
+      font-size: 12px;
+      color: #6B7280;
+      font-weight: 400;
+    }
+
+    .btn-add-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #9CA3AF;
+      background: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #4B5563;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .btn-add-circle:hover {
+      border-color: var(--brand-dark);
+      color: var(--brand-dark);
+      background-color: var(--brand-light);
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-text-close {
+      background: none;
+      border: none;
+      color: var(--brand-dark);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+
+    .btn-text-close:hover {
+      background-color: var(--brand-light);
+    }
+
+    /* ============================
+       MEDIA QUERIES (RESPONSIVE)
+       ============================ */
+    @media (max-width: 1024px) {
+
+      /* Mengubah Sidebar menjadi Bottom Nav */
+      .main-nav {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        padding: 8px 4px;
+        flex-direction: row;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .nav-brand {
+        display: none;
+      }
+
+      .nav-links {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        gap: 4px;
+        flex: 1;
+        min-width: 55px;
+        background-color: transparent !important;
+        border-radius: 0;
+      }
+
+      .nav-item.active {
+        color: var(--brand-dark);
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 14px;
+      }
+
+      .nav-item.active .icon-wrapper {
+        background-color: var(--brand-light);
+      }
+
+      .nav-item img.icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .nav-text {
+        font-size: 10px;
+        white-space: nowrap;
+      }
+
+      /* Menyembunyikan teks versi Desktop dan Menampilkan versi Mobile */
+      .text-desktop {
+        display: none;
+      }
+
+      .text-mobile {
+        display: inline;
+      }
+
+      /* Ruang kosong agar konten tidak tertutup nav */
+      body {
+        padding-bottom: 70px;
+      }
+
+      /* Penyesuaian Konten */
+      .main-content {
+        padding: 32px 24px;
+      }
+
+      .header-area {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .weekly-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 24px 16px;
+      }
+
+      .header-title h1 {
+        font-size: 24px;
+      }
+
+      .weekly-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .day-card {
+        padding: 16px;
+        border-radius: 16px;
+      }
+
+      /* Mengecilkan ukuran icon di layar HP yang lebih kecil */
+      .nav-item .icon-wrapper {
+        padding: 6px 12px;
+      }
+
+      .nav-item img.icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .nav-text {
+        font-size: 9px;
+      }
+
+      /* Penyesuaian Modal */
+      .modal-body {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal-container {
+        border-radius: 24px 24px 0 0;
+        max-height: 90vh;
+        margin-top: auto;
+        transform: translateY(100%);
+        padding-bottom: 24px;
+      }
+
+      .modal-overlay.active .modal-container {
+        transform: translateY(0);
+      }
+
+      .modal-container::before {
+        content: '';
+        width: 36px;
+        height: 4px;
+        background-color: #E5E7EB;
+        border-radius: 4px;
+        margin: 12px auto 0 auto;
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="main-nav">
+    <a class="nav-brand">Cook&Cart</a>
+    <div class="nav-links">
+      <a href="JelajahResep.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconJelajah.svg" alt="" class="icon"></div>
+        <span class="nav-text">Jelajah</span>
+      </a>
+      <a href="rencanaMenuMingguan.html" class="nav-item active">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconRencana.svg" alt="" class="icon"></div>
+        <span class="nav-text">Rencana</span>
+      </a>
+      <a href="PDF_belanja.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconPDFRencana.svg" alt="" class="icon"></div>
+        <span class="nav-text text-desktop">PDF Rencana</span>
+        <span class="nav-text text-mobile">PDF</span>
+      </a>
+      <a href="Pengeluaran.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconPengeluaran.svg" alt="" class="icon"></div>
+        <span class="nav-text text-desktop">Pengeluaran</span>
+        <span class="nav-text text-mobile">Biaya</span>
+      </a>
+      <a href="upload_Resep.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconUploadResep.svg" alt="" class="icon"></div>
+        <span class="nav-text text-desktop">Upload Resep</span>
+        <span class="nav-text text-mobile">Upload</span>
+      </a>
+      <a href="profil.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconProfil.svg" alt="" class="icon"></div>
+        <span class="nav-text">Profil</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <section class="header-area">
+      <div class="header-title">
+        <h1>Rencana Menu Mingguan</h1>
+        <p>Susun menu harian Anda dengan mudah. Pilih resep favorit Anda untuk sarapan, makan siang, dan makan malam
+          secara manual.</p>
+      </div>
+    </section>
+
+    <section class="weekly-grid">
+      <div class="day-card">
+        <div class="day-header"><span class="day-name">Senin</span></div>
+        <div class="meal-slot breakfast">
+          <div class="meal-badge">SARAPAN</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot lunch">
+          <div class="meal-badge">MAKAN SIANG</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot dinner">
+          <div class="meal-badge">MAKAN MALAM</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-header"><span class="day-name">Selasa</span></div>
+        <div class="meal-slot breakfast">
+          <div class="meal-badge">SARAPAN</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot lunch">
+          <div class="meal-badge">MAKAN SIANG</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot dinner">
+          <div class="meal-badge">MAKAN MALAM</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-header"><span class="day-name">Rabu</span></div>
+        <div class="meal-slot breakfast">
+          <div class="meal-badge">SARAPAN</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot lunch">
+          <div class="meal-badge">MAKAN SIANG</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot dinner">
+          <div class="meal-badge">MAKAN MALAM</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-header"><span class="day-name">Kamis</span></div>
+        <div class="meal-slot breakfast">
+          <div class="meal-badge">SARAPAN</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot lunch">
+          <div class="meal-badge">MAKAN SIANG</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot dinner">
+          <div class="meal-badge">MAKAN MALAM</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-header"><span class="day-name">Jumat</span></div>
+        <div class="meal-slot breakfast">
+          <div class="meal-badge">SARAPAN</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot lunch">
+          <div class="meal-badge">MAKAN SIANG</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot dinner">
+          <div class="meal-badge">MAKAN MALAM</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-header"><span class="day-name">Sabtu</span></div>
+        <div class="meal-slot breakfast">
+          <div class="meal-badge">SARAPAN</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot lunch">
+          <div class="meal-badge">MAKAN SIANG</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot dinner">
+          <div class="meal-badge">MAKAN MALAM</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-header"><span class="day-name">Minggu</span></div>
+        <div class="meal-slot breakfast">
+          <div class="meal-badge">SARAPAN</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot lunch">
+          <div class="meal-badge">MAKAN SIANG</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+        <div class="meal-slot dinner">
+          <div class="meal-badge">MAKAN MALAM</div>
+          <div class="meal-content-box empty" onclick="openModal(this)">
+            <span>+ Tambah Menu</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="modalMenu">
+    <div class="modal-container">
+
+      <div class="modal-header">
+        <h2>Pilih Resep</h2>
+        <button class="btn-close" onclick="closeModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-tools">
+        <div class="input-search-wrapper">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Cari resep...">
+        </div>
+        <div class="modal-filters">
+          <button class="filter-chip">Semua</button>
+          <button class="filter-chip active">Masakan Indonesia</button>
+          <button class="filter-chip">Makan Siang</button>
+          <button class="filter-chip">Sehat</button>
+          <button class="filter-chip">Cepat saji</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="recipe-card">
+          <img src="img/rencana_menu_mingguan/Pempek Palembang.jpg" class="recipe-thumb" alt="Pempek palembang">
+          <div class="recipe-info">
+            <div class="recipe-title">Pempek palembang</div>
+            <div class="recipe-meta">15 mnt • Masakan Indonesia</div>
+          </div>
+          <button class="btn-add-circle" onclick="selectRecipe(this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="recipe-card">
+          <img src="img/rencana_menu_mingguan/Bakso Sapi Solo.jpg" class="recipe-thumb" alt="Bakso sapi solo">
+          <div class="recipe-info">
+            <div class="recipe-title">Bakso sapi solo</div>
+            <div class="recipe-meta">25 mnt • Masakan Indonesia</div>
+          </div>
+          <button class="btn-add-circle" onclick="selectRecipe(this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="recipe-card">
+          <img src="img/rencana_menu_mingguan/Gado-Gado Betawi.jpg" class="recipe-thumb" alt="Gado-gado betawi">
+          <div class="recipe-info">
+            <div class="recipe-title">Gado-gado betawi</div>
+            <div class="recipe-meta">10 mnt • Sarapan</div>
+          </div>
+          <button class="btn-add-circle" onclick="selectRecipe(this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="recipe-card">
+          <img src="img/rencana_menu_mingguan/Sate Ayam Madura.png" class="recipe-thumb" alt="Sate kambing">
+          <div class="recipe-info">
+            <div class="recipe-title">Sate ayam</div>
+            <div class="recipe-meta">20 mnt • Makan malam</div>
+          </div>
+          <button class="btn-add-circle" onclick="selectRecipe(this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-text-close" onclick="closeModal()">Tutup</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('modalMenu');
+    // Variabel untuk "mengingat" kotak yang sedang di-klik
+    let currentSlot = null;
+
+    // Fungsi membuka modal yang dimodifikasi untuk menerima elemen kotak (this)
+    function openModal(element) {
+      currentSlot = element; // Ingat kotak mana yang mengaktifkan pop-up
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Fungsi menutup modal
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      currentSlot = null; // Bersihkan memori setelah modal tertutup
+    }
+
+    // Fungsi BARU: Mengambil data dari pop up dan memasukkannya ke kotak
+    function selectRecipe(buttonElement) {
+      if (!currentSlot) return; // Jika tidak ada kotak yang diingat, abaikan
+
+      // Ambil elemen card, gambar, dan judul dari tombol yang di-klik
+      const recipeCard = buttonElement.closest('.recipe-card');
+      const imgSrc = recipeCard.querySelector('.recipe-thumb').src;
+      const title = recipeCard.querySelector('.recipe-title').innerText;
+
+      // Ubah tampilan kotak (hapus class 'empty', tambah class 'filled')
+      currentSlot.classList.remove('empty');
+      currentSlot.classList.add('filled');
+
+      // Mengubah isi HTML kotak dengan gambar resep, nama, dan tombol hapus icon tempat sampah
+      currentSlot.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+          <img src="${imgSrc}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+          <span style="font-weight: 600; font-size: 14px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark);">${title}</span>
+          <button onclick="removeRecipe(event, this)" style="background: none; border: none; cursor: pointer; color: #EF4444; display: flex; align-items: center; justify-content: center; padding: 4px;" title="Hapus Menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      `;
+
+      // Tutup pop-up
+      closeModal();
+    }
+
+    // Fungsi BARU: Menghapus menu dari kotak dan mengembalikannya ke state awal
+    function removeRecipe(event, deleteButton) {
+      event.stopPropagation(); // Mencegah event "click" menembus ke kotak induk yang akan memanggil openModal() lagi
+
+      // Cari kotak terluarnya
+      const slot = deleteButton.closest('.meal-content-box');
+
+      // Kembalikan kotak ke kondisi 'kosong'
+      slot.classList.remove('filled');
+      slot.classList.add('empty');
+      slot.innerHTML = `<span>+ Tambah Menu</span>`;
+    }
+
+    // Menutup modal jika area gelap di luar kotak di-klik
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

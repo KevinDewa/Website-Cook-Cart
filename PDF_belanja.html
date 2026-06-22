@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PDF Belanja - Cook&Cart</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      /* Palet Warna Cook&Cart */
+      --brand-dark: #006C45;
+      --brand-primary: #00A859;
+      --brand-light: #E8F5EE;
+      --text-dark: #1A1A1A;
+      --text-gray: #4B5563;
+      --text-light: #9CA3AF;
+      --border-color: #E5E7EB;
+      --bg-body: #FFFFFF;
+      --bg-main: #F9FAFB;
+      --bg-search: #F5F5F5;
+
+      /* Tambahan warna khusus halaman PDF */
+      --bg-receipt: #F3F4F6;
+      --btn-orange: #F97316;
+      --btn-orange-hover: #EA580C;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      color: var(--text-dark);
+      background-color: var(--bg-body);
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    /* ============================
+       1. MAIN NAV (RESPONSIVE)
+       ============================ */
+    .main-nav {
+      width: 260px;
+      background-color: var(--bg-body);
+      border-right: 1px solid var(--border-color);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 900;
+    }
+
+    .nav-brand {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--brand-dark);
+      text-decoration: none;
+      margin-bottom: 48px;
+      padding-left: 12px;
+      letter-spacing: -0.5px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text-gray);
+      font-weight: 500;
+      font-size: 15px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background-color: var(--bg-search);
+      color: var(--text-dark);
+    }
+
+    .nav-item.active {
+      background-color: var(--brand-light);
+      color: var(--brand-dark);
+      font-weight: 600;
+    }
+
+    .nav-item .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+    }
+
+    .nav-item img.icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .text-mobile {
+      display: none;
+    }
+
+    /* ============================
+       2. AREA KONTEN UTAMA
+       ============================ */
+    .main-content {
+      flex: 1;
+      background-color: var(--bg-main);
+      padding: 40px 48px;
+      max-width: 100%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-area {
+      margin-bottom: 32px;
+    }
+
+    .header-area h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .header-area p {
+      font-size: 14px;
+      color: var(--text-gray);
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    /* Layout 2 Kolom (Kiri: Form & Tabel, Kanan: Preview PDF) */
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* --- BAGIAN KIRI --- */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      min-width: 0;
+    }
+
+    /* Card Tambah Item Baru */
+    .add-card {
+      background-color: var(--brand-light);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .add-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .add-form-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr auto;
+      gap: 16px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .form-control {
+      background-color: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .form-control:focus {
+      border-color: var(--brand-primary);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234B5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--brand-dark);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 43px;
+      transition: background-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--brand-primary);
+    }
+
+    /* Card Daftar Belanja */
+    .list-card {
+      background-color: var(--bg-body);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--border-color);
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .list-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .item-count-badge {
+      background-color: var(--bg-receipt);
+      color: var(--text-gray);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 50px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Tabel Grid */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .table-header,
+    .table-row {
+      display: grid;
+      grid-template-columns: 50px 2.5fr 1.5fr 1fr 50px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-color);
+      min-width: 500px;
+    }
+
+    .table-header {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-gray);
+      padding-top: 0;
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .table-cell {
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+
+    .cell-name {
+      font-weight: 600;
+    }
+
+    /* Custom Checkbox */
+    .custom-checkbox {
+      position: relative;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .custom-checkbox input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background-color: transparent;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .custom-checkbox input:checked~.checkmark {
+      background-color: var(--brand-dark);
+      border-color: var(--brand-dark);
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .custom-checkbox input:checked~.checkmark:after {
+      display: block;
+    }
+
+    /* Category Pill */
+    .cat-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .cat-bumbu {
+      background-color: #F3F4F6;
+      color: #4B5563;
+    }
+
+    .cat-daging {
+      background-color: #FFEDD5;
+      color: #C2410C;
+    }
+
+    .cat-sayur {
+      background-color: #E0E7FF;
+      color: #4338CA;
+    }
+
+    .cat-lainnya {
+      background-color: #E5E7EB;
+      color: #374151;
+    }
+
+    /* Delete Button */
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #9CA3AF;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .btn-delete:hover {
+      color: #EF4444;
+    }
+
+    /* --- BAGIAN KANAN (PREVIEW PDF) --- */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .receipt-preview {
+      background-color: var(--bg-body);
+      padding: 32px 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .receipt-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .receipt-icon {
+      margin-top: 56px;
+      color: var(--brand-primary);
+      margin-bottom: 16px;
+    }
+
+    .receipt-brand {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand-primary);
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .receipt-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .receipt-date {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-gray);
+    }
+
+    .receipt-body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 1.4;
+    }
+
+    .receipt-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      padding-right: 12px;
+    }
+
+    .receipt-item-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .receipt-item-qty {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-gray);
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .receipt-footer {
+      border-top: 1px dashed var(--border-color);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .btn-download {
+      background-color: var(--btn-orange);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      transition: background-color 0.2s;
+    }
+
+    .btn-download:hover {
+      background-color: var(--btn-orange-hover);
+    }
+
+    .download-helper {
+      font-size: 11px;
+      color: var(--text-gray);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ============================
+       3. MEDIA QUERIES (RESPONSIVE)
+       ============================ */
+    @media print {
+
+      .main-nav,
+      .header-area,
+      .left-panel,
+      .btn-download,
+      .download-helper {
+        display: none !important;
+      }
+
+      body,
+      .main-content,
+      .content-grid,
+      .right-panel {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        width: 100% !important;
+        background-color: white !important;
+      }
+
+      .receipt-preview {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      @page {
+        margin: 1cm;
+      }
+    }
+
+    @media (max-width: 1024px) {
+
+      /* Mengubah Sidebar menjadi Bottom Nav */
+      .main-nav {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        padding: 8px 4px;
+        flex-direction: row;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .nav-brand {
+        display: none;
+      }
+
+      .nav-links {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        gap: 4px;
+        flex: 1;
+        min-width: 55px;
+        background-color: transparent !important;
+        border-radius: 0;
+      }
+
+      .nav-item:hover {
+        background-color: transparent !important;
+      }
+
+      .nav-item.active {
+        color: var(--brand-dark);
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 14px;
+      }
+
+      .nav-item.active .icon-wrapper {
+        background-color: var(--brand-light);
+      }
+
+      .nav-item img.icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .nav-text {
+        font-size: 10px;
+        white-space: nowrap;
+      }
+
+      .text-desktop {
+        display: none;
+      }
+
+      .text-mobile {
+        display: inline;
+      }
+
+      body {
+        padding-bottom: 70px;
+      }
+
+      .main-content {
+        padding: 32px 24px;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .add-form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .main-content {
+        padding: 24px 16px;
+      }
+
+      .add-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .table-header {
+        display: none;
+      }
+
+      .table-row {
+        grid-template-columns: auto 1fr auto auto;
+        gap: 12px;
+        position: relative;
+        min-width: auto;
+      }
+
+      .table-row>div:nth-child(3) {
+        grid-column: 2 / 3;
+        grid-row: 2;
+      }
+
+      .table-row>div:nth-child(4) {
+        grid-column: 3 / 4;
+        grid-row: 1 / 3;
+        align-self: center;
+      }
+
+      .table-row>div:nth-child(5) {
+        grid-column: 4 / 5;
+        grid-row: 1 / 3;
+        align-self: center;
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 12px;
+      }
+
+      .nav-item img.icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .nav-text {
+        font-size: 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="main-nav">
+    <a class="nav-brand">Cook&Cart</a>
+    <div class="nav-links">
+      <a href="JelajahResep.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconJelajah.svg" alt="Jelajah" class="icon"></div>
+        <span class="nav-text">Jelajah</span>
+      </a>
+      <a href="rencanaMenuMingguan.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconRencana.svg" alt="Rencana" class="icon"></div>
+        <span class="nav-text">Rencana</span>
+      </a>
+      <a href="PDF_belanja.html" class="nav-item active">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconPDFRencana.svg" alt="PDF" class="icon"></div>
+        <span class="nav-text text-desktop">PDF Rencana</span>
+        <span class="nav-text text-mobile">PDF</span>
+      </a>
+      <a href="Pengeluaran.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconPengeluaran.svg" alt="Pengeluaran" class="icon"></div>
+        <span class="nav-text text-desktop">Pengeluaran</span>
+        <span class="nav-text text-mobile">Biaya</span>
+      </a>
+      <a href="upload_Resep.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconUploadResep.svg" alt="Upload" class="icon"></div>
+        <span class="nav-text text-desktop">Upload Resep</span>
+        <span class="nav-text text-mobile">Upload</span>
+      </a>
+      <a href="profil.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/PDF_belanja/IconProfil.svg" alt="Profil" class="icon"></div>
+        <span class="nav-text">Profil</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <div class="header-area">
+      <h1>PDF Belanja</h1>
+      <p>Susun daftar kebutuhan bahan harian Anda, kelola dengan mudah, dan unduh sebagai panduan belanja fisik yang
+        rapi.</p>
+    </div>
+
+    <div class="content-grid">
+
+      <div class="left-panel">
+        <div class="add-card">
+          <div class="add-card-header">
+            <div class="icon-wrapper">
+              <img src="img/PDF_belanja/IcontambahItem.svg" alt="" class="icon">
+            </div>
+            Tambah Item Baru
+          </div>
+          <form id="addForm" class="add-form-grid" onsubmit="event.preventDefault(); addItem();">
+            <div class="form-group">
+              <label for="inputName">Nama Bahan</label>
+              <input type="text" id="inputName" class="form-control" placeholder="Mis. Dada Ayam Fillet" required>
+            </div>
+            <div class="form-group">
+              <label for="inputCategory">Kategori</label>
+              <select id="inputCategory" class="form-control form-select">
+                <option value="Daging">Daging & Ikan</option>
+                <option value="Sayur">Sayur & Buah</option>
+                <option value="Bumbu">Bumbu & Rempah</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="inputQty">Jumlah</label>
+              <input type="text" id="inputQty" class="form-control" placeholder="Mis. 500g" required>
+            </div>
+            <button type="submit" class="btn-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Tambah
+            </button>
+          </form>
+        </div>
+
+        <div class="list-card">
+          <div class="list-header">
+            <h2>Daftar Belanja Saat Ini</h2>
+            <div class="item-count-badge" id="itemCountBadge">4 Item</div>
+          </div>
+
+          <div class="table-container">
+            <div class="table-header">
+              <div>Check</div>
+              <div>Bahan</div>
+              <div>Kategori</div>
+              <div>Qty</div>
+              <div style="text-align: center;">Aksi</div>
+            </div>
+            <div id="tableBody"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="receipt-preview" id="receiptArea">
+          <div class="receipt-header">
+            <img src="img/PDF_belanja/IconCook.svg" alt="" class="icon receipt-icon">
+            <div class="receipt-brand">COOK&CART</div>
+            <div class="receipt-title">DAFTAR BELANJA</div>
+            <div class="receipt-date">24 Okt 2023 • 08:30 AM</div>
+          </div>
+
+          <div class="receipt-body" id="receiptBody"></div>
+
+          <div class="receipt-footer">
+            <span>TOTAL ITEM</span>
+            <span id="receiptTotal">4</span>
+          </div>
+        </div>
+
+        <button class="btn-download" onclick="window.print()">
+          <div class="icon-wrapper"><img src="img/PDF_belanja/IconDownload.svg" alt="" class="icon"></div>
+          Unduh PDF
+        </button>
+        <p class="download-helper">Dokumen akan diunduh dalam format A4 yang siap cetak.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // State Awal Data (Sesuai Desain Figma)
+    let shoppingList = [
+      { id: 1, name: "Bawang Merah Besar", category: "Bumbu", qty: "250g", checked: true },
+      { id: 2, name: "Dada Ayam Fillet", category: "Daging", qty: "1 kg", checked: false },
+      { id: 3, name: "Tomat Ceri", category: "Sayur", qty: "2 Pack", checked: false },
+      { id: 4, name: "Susu Almond Unsweetened", category: "Lainnya", qty: "1 Liter", checked: false }
+    ];
+
+    // Fungsi Render UI (Tabel & Struk)
+    function renderApp() {
+      const tableBody = document.getElementById('tableBody');
+      const receiptBody = document.getElementById('receiptBody');
+      const itemCountBadge = document.getElementById('itemCountBadge');
+      const receiptTotal = document.getElementById('receiptTotal');
+
+      tableBody.innerHTML = '';
+      receiptBody.innerHTML = '';
+
+      // Update Total
+      itemCountBadge.innerText = `${shoppingList.length} Item`;
+      receiptTotal.innerText = shoppingList.length;
+
+      shoppingList.forEach(item => {
+        // 1. Render Baris Tabel
+        const row = document.createElement('div');
+        row.className = 'table-row';
+
+        let catClass = 'cat-lainnya';
+        if (item.category === 'Bumbu') catClass = 'cat-bumbu';
+        else if (item.category === 'Daging') catClass = 'cat-daging';
+        else if (item.category === 'Sayur') catClass = 'cat-sayur';
+
+        row.innerHTML = `
+          <div class="table-cell">
+            <label class="custom-checkbox">
+              <input type="checkbox" onchange="toggleItem(${item.id})" ${item.checked ? 'checked' : ''}>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="table-cell cell-name">${item.name}</div>
+          <div class="table-cell">
+            <span class="cat-pill ${catClass}">${item.category === 'Daging' ? 'Daging' : item.category}</span>
+          </div>
+          <div class="table-cell">${item.qty}</div>
+          <div class="table-cell" style="text-align: center;">
+            <button class="btn-delete" onclick="deleteItem(${item.id})" title="Hapus">
+              <div class="icon-wrapper"><img src="img/PDF_belanja/IconHapus.svg" alt="" class="icon"></div>
+            </button>
+          </div>
+        `;
+        tableBody.appendChild(row);
+
+        // 2. Render Baris Struk
+        const receiptRow = document.createElement('div');
+        receiptRow.className = 'receipt-item';
+
+        const iconCheck = item.checked
+          ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--brand-primary)" stroke="var(--brand-primary)"><circle cx="12" cy="12" r="10" stroke="none"></circle><path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>`
+          : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>`;
+
+        const nameStyle = item.checked ? 'color: var(--text-gray);' : '';
+
+        receiptRow.innerHTML = `
+          <div class="receipt-item-left">
+            ${iconCheck}
+            <span class="receipt-item-name" style="${nameStyle}">${item.name}</span>
+          </div>
+          <div class="receipt-item-qty">${item.qty}</div>
+        `;
+        receiptBody.appendChild(receiptRow);
+      });
+    }
+
+    // Fungsi Tambah Item
+    function addItem() {
+      const inputName = document.getElementById('inputName');
+      const inputCategory = document.getElementById('inputCategory');
+      const inputQty = document.getElementById('inputQty');
+
+      const newItem = {
+        id: Date.now(),
+        name: inputName.value,
+        category: inputCategory.value,
+        qty: inputQty.value,
+        checked: false
+      };
+
+      shoppingList.push(newItem);
+
+      inputName.value = '';
+      inputQty.value = '';
+      inputCategory.selectedIndex = 0;
+
+      renderApp();
+    }
+
+    // Fungsi Hapus Item
+    function deleteItem(id) {
+      shoppingList = shoppingList.filter(item => item.id !== id);
+      renderApp();
+    }
+
+    // Fungsi Toggle Checkbox
+    function toggleItem(id) {
+      const item = shoppingList.find(item => item.id === id);
+      if (item) {
+        item.checked = !item.checked;
+        renderApp();
+      }
+    }
+
+    // Render pertama kali saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+      renderApp();
+
+      const dateElement = document.querySelector('.receipt-date');
+      const today = new Date();
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+
+      const formattedDate = today.toLocaleDateString('id-ID', options);
+      const formattedTime = today.toLocaleTimeString('en-US', timeOptions);
+
+      dateElement.innerText = `${formattedDate} • ${formattedTime}`;
+    });
+
+  </script>
+</body>
+
+</html>
