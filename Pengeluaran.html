@@ -1296,6 +1296,7 @@
       const currentYear = now.getFullYear();
       const currentMonth = now.getMonth();
       const currentDate = now.getDate();
+      const dayOfWeek = now.getDay(); // 0 = Minggu, 1 = Senin, dst
       let startDate, endDate;
 
       switch (currentFilter) {
@@ -1304,13 +1305,16 @@
           endDate = new Date(currentYear, currentMonth, currentDate, 23, 59, 59, 999);
           break;
         case 'mingguan':
-          startDate = new Date(currentYear, currentMonth, 1, 0, 0, 0, 0);
-          endDate = new Date(currentYear, currentMonth, currentDate, 23, 59, 59, 999);
+          // Minggu ini = dari hari Minggu lalu hingga hari ini
+          const startOfWeek = new Date(currentYear, currentMonth, currentDate - dayOfWeek, 0, 0, 0, 0);
+          const endOfWeek = new Date(currentYear, currentMonth, currentDate - dayOfWeek + 6, 23, 59, 59, 999);
+          startDate = startOfWeek;
+          endDate = endOfWeek;
           break;
         case 'bulanan':
         default:
-          startDate = new Date(currentYear, 0, 1, 0, 0, 0, 0);
-          endDate = new Date(currentYear, currentMonth, currentDate, 23, 59, 59, 999);
+          startDate = new Date(currentYear, currentMonth, 1, 0, 0, 0, 0);
+          endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
           break;
       }
 
@@ -1956,14 +1960,26 @@
       if (total === 0) {
         html = '<p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>';
       } else {
-        Object.keys(kategoriTotals).forEach(kategori => {
+        // Urutkan dari yang terbesar
+        const sortedCategories = Object.keys(kategoriTotals).sort((a, b) => kategoriTotals[b] - kategoriTotals[a]);
+
+        sortedCategories.forEach(kategori => {
           const val = kategoriTotals[kategori];
           if (val > 0) {
             const rawPct = (val / total) * 100;
             const pct = rawPct < 1 && rawPct > 0 ? 1 : parseFloat(rawPct.toFixed(1));
             html += `
               <div class="dist-item">
-                <div class="dist-header"><span>${kategori}</span><span>${pct}%</span></div>
+                <div class="dist-header">
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:${colors[i % colors.length]};"></span>
+                    ${kategori}
+                  </span>
+                  <span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+                    <strong>${formatRp(val)}</strong>
+                    <small style="color:#64748b;">${pct}%</small>
+                  </span>
+                </div>
                 <div class="dist-bar-bg">
                   <div class="dist-bar-fill" style="width: ${pct}%; background-color: ${colors[i % colors.length]};"></div>
                 </div>
@@ -1999,14 +2015,26 @@
       if (total === 0) {
         html = '<p style="color:#64748b;text-align:center;font-size:14px;">Belum ada data transaksi</p>';
       } else {
-        Object.keys(kategoriTotals).forEach(kategori => {
+        // Urutkan dari yang terbesar
+        const sortedCategories = Object.keys(kategoriTotals).sort((a, b) => kategoriTotals[b] - kategoriTotals[a]);
+
+        sortedCategories.forEach(kategori => {
           const val = kategoriTotals[kategori];
           if (val > 0) {
             const rawPct = (val / total) * 100;
             const pct = rawPct < 1 && rawPct > 0 ? 1 : parseFloat(rawPct.toFixed(1));
             html += `
               <div class="dist-item">
-                <div class="dist-header"><span>${kategori}</span><span>${pct}%</span></div>
+                <div class="dist-header">
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:${colors[i % colors.length]};"></span>
+                    ${kategori}
+                  </span>
+                  <span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+                    <strong>${formatRp(val)}</strong>
+                    <small style="color:#64748b;">${pct}%</small>
+                  </span>
+                </div>
                 <div class="dist-bar-bg">
                   <div class="dist-bar-fill" style="width: ${pct}%; background-color: ${colors[i % colors.length]};"></div>
                 </div>
@@ -2197,32 +2225,45 @@
         remainingData = [Math.max(budget - todaySpent, 0)];
 
       } else if (currentFilter === 'mingguan') {
-        const weekLabels = ['Mg 1 (1-7)', 'Mg 2 (8-14)', 'Mg 3 (15-21)', 'Mg 4 (22-31)'];
+        // Minggu ini = dari hari Minggu lalu hingga hari ini
+        const dayOfWeek = now.getDay(); // 0 = Minggu
+        const startOfWeekDay = currentDate - dayOfWeek;
+        const endOfWeekDay = startOfWeekDay + 6;
+
+        const weekLabels = ['Mg 1', 'Mg 2', 'Mg 3', 'Mg 4'];
         const weeklySpent = [0, 0, 0, 0];
 
         buyerTrans.forEach(t => {
           const tDate = new Date(t.tanggal + 'T00:00:00');
           if (tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth) {
             const day = tDate.getDate();
+            // Minggu 1: 1 - 7, Minggu 2: 8 - 14, Minggu 3: 15 - 21, Minggu 4: 22+
             if (day >= 1 && day <= 7) weeklySpent[0] += parseInt(t.harga || 0);
             else if (day >= 8 && day <= 14) weeklySpent[1] += parseInt(t.harga || 0);
             else if (day >= 15 && day <= 21) weeklySpent[2] += parseInt(t.harga || 0);
-            else if (day >= 22 && day <= 31) weeklySpent[3] += parseInt(t.harga || 0);
+            else if (day >= 22) weeklySpent[3] += parseInt(t.harga || 0);
           }
         });
 
-        labels = [];
-        spentData = [];
+        // Filter hanya minggu yang ada datanya atau minggu ini
+        const filteredWeeks = [];
         weeklySpent.forEach((spent, i) => {
-          if (spent > 0) {
-            labels.push(weekLabels[i]);
-            spentData.push(spent);
+          const weekStart = i * 7 + 1;
+          const weekEnd = weekStart + 6;
+          // Tampilkan jika ada data ATAU jika ini minggu ini (berdasarkan tanggal hari ini)
+          const isThisWeek = (currentDate >= weekStart && currentDate <= weekEnd);
+          if (spent > 0 || isThisWeek) {
+            filteredWeeks.push({ index: i, label: weekLabels[i], spent: spent });
           }
         });
 
-        if (labels.length === 0) {
+        if (filteredWeeks.length === 0) {
+          // Default tampilkan 4 minggu
           labels = weekLabels;
           spentData = weeklySpent;
+        } else {
+          labels = filteredWeeks.map(w => w.label);
+          spentData = filteredWeeks.map(w => w.spent);
         }
 
         budgetData = spentData.map(() => budget);
