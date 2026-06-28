@@ -521,6 +521,247 @@
       background-color: #009E6A;
     }
 
+    /* Error validation styles */
+    .form-group.error .form-control {
+      border-color: #ef4444 !important;
+      background-color: #fef2f2 !important;
+    }
+
+    .form-group.error .error-message {
+      display: block;
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .error-message {
+      display: none;
+    }
+
+    .btn-add:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Global error box */
+    .error-box {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .error-box.show {
+      display: flex;
+    }
+
+    .error-box-icon {
+      color: #ef4444;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .error-box-content {
+      flex: 1;
+    }
+
+    .error-box-title {
+      color: #dc2626;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .error-box-list {
+      color: #7f1d1d;
+      font-size: 13px;
+      margin: 0;
+      padding-left: 16px;
+    }
+
+    .error-box-list li {
+      margin-bottom: 2px;
+    }
+
+    /* Success Modal Popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-success {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-overlay.show .modal-success {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      animation: bounceIn 0.6s ease;
+    }
+
+    .modal-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: white;
+      stroke-width: 3;
+    }
+
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes checkmark {
+      0% {
+        stroke-dashoffset: 100;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .modal-icon svg path {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: checkmark 0.5s ease 0.3s forwards;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+
+    .modal-message {
+      font-size: 15px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .modal-recipe-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #059669;
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: #ecfdf5;
+      border-radius: 8px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .modal-btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .modal-btn-primary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+    }
+
+    .modal-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+    }
+
+    .modal-btn-secondary {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    .modal-btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .modal-confetti {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      animation: confettiFall 1.5s ease forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-20px) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(200px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
     /* ============================
            4. RESPONSIVE DESIGN (MEDIA QUERIES)
            ============================ */
@@ -662,7 +903,7 @@
               <div class="upload-icon">
                 <img src="img\upload_resep\IconFoto.svg" alt="Camera">
               </div>
-              <div class="upload-title">Unggah Foto Utama</div>
+              <div class="upload-title">Unggah Foto Utama <span style="color:#ef4444;">*</span></div>
               <div class="upload-desc">Format JPG, PNG (Maks 5MB).<br>Rasio 4:5 direkomendasikan.</div>
             </div>
             <img id="preview-image" class="preview-image" src="" alt="Preview Foto Resep">
@@ -675,7 +916,7 @@
             <div class="input-icon-wrapper">
               <input type="text" id="input-nama-resep" class="form-control"
                 placeholder="Contoh: Ayam Panggang Rosemary">
-              <img id="icon-check-resep" src="img/upload_resep/IconCheckCircle.svg" alt="Valid"
+              <img id="icon-check-resep" src="img\upload_resep\IconValid.svg" alt="Valid"
                 class="icon-right hidden-icon">
             </div>
           </div>
@@ -683,35 +924,61 @@
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label">Porsi</label>
-              <input type="text" class="form-control" placeholder="Contoh: 2 Orang">
+              <input type="text" class="form-control" id="input-porsi" placeholder="Contoh: 2 Orang">
             </div>
             <div class="form-group">
               <label class="form-label">Waktu Memasak</label>
-              <input type="text" class="form-control" placeholder="Contoh: 45 Menit">
+              <input type="text" class="form-control" id="input-waktu" placeholder="Contoh: 45 Menit">
             </div>
           </div>
 
           <div class="grid-2">
             <div class="form-group">
-              <label class="form-label">Asal Masakan</label>
-              <select class="form-control">
-                <option>Pilih Negara</option>
+              <label class="form-label">Asal Masakan <span style="color:#ef4444;">*</span></label>
+              <select class="form-control" id="input-asal-masakan">
+                <option value="">Pilih Negara</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Singapura">Singapura</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Filipina">Filipina</option>
+                <option value="India">India</option>
+                <option value="China">China</option>
+                <option value="Jepang">Jepang</option>
+                <option value="Korea">Korea</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Waktu Makan</label>
-              <select class="form-control">
-                <option>Pilih Waktu</option>
+              <label class="form-label">Waktu Makan <span style="color:#ef4444;">*</span></label>
+              <select class="form-control" id="input-waktu-makan">
+                <option value="">Pilih Waktu</option>
+                <option value="Sarapan">Sarapan</option>
+                <option value="Makan Siang">Makan Siang</option>
+                <option value="Makan Malam">Makan Malam</option>
               </select>
             </div>
           </div>
 
           <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label">Kategori Masakan</label>
+            <label class="form-label">Kategori Masakan <span style="color:#ef4444;">*</span></label>
             <div class="input-icon-wrapper has-left">
               <img src="img\upload_resep\IconKategori.svg" alt="Kategori" class="icon-left">
-              <select class="form-control">
-                <option>Pilih Kategori</option>
+              <select class="form-control" id="input-kategori-masakan">
+                <option value="">Pilih Kategori</option>
+                <option value="Tinggi Protein">Tinggi Protein</option>
+                <option value="Cemilan">Cemilan</option>
+                <option value="Makanan Berat">Makanan Berat</option>
+                <option value="Makanan Ringan">Makanan Ringan</option>
+                <option value="Sup/Soup">Sup/Soup</option>
+                <option value="Minuman">Minuman</option>
+                <option value="Puding/Desert">Puding/Desert</option>
+                <option value="Salad">Salad</option>
+                <option value="Gorengan">Gorengan</option>
+                <option value="Bakar/Panggang">Bakar/Panggang</option>
+                <option value="Kukus/Steam">Kukus/Steam</option>
+                <option value="Tumis/Wok">Tumis/Wok</option>
+                <option value="Lainnya">Lainnya</option>
               </select>
             </div>
           </div>
@@ -720,7 +987,7 @@
 
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">Bahan-bahan</h2>
+          <h2 class="card-title">Bahan-bahan <span style="color:#ef4444;">*</span></h2>
           <p class="card-subtitle">Tuliskan takaran yang jelas agar mudah diikuti.</p>
         </div>
 
@@ -741,7 +1008,7 @@
 
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">Langkah Pembuatan</h2>
+          <h2 class="card-title">Langkah Pembuatan <span style="color:#ef4444;">*</span></h2>
           <p class="card-subtitle">Jelaskan prosesnya secara berurutan.</p>
         </div>
 
@@ -779,10 +1046,17 @@
       </div>
 
       <div class="actions-bottom">
-        <a href="JelajahResep.html" class="btn-primary" style="text-decoration: none;">
+        <div class="error-box" id="error-box">
+          <div class="error-box-icon">⚠️</div>
+          <div class="error-box-content">
+            <div class="error-box-title">Mohon lengkapi data berikut:</div>
+            <ul class="error-box-list" id="error-list"></ul>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="publikasikanResep()">
           <img src="img/upload_resep/IconPublikasikan.svg" alt="Upload">
           Publikasikan Resep
-        </a>
+        </button>
       </div>
 
     </div>
@@ -816,6 +1090,11 @@
   </nav>
 
   <script>
+    // --- KONSTANTA OPSI ---
+    const ASAL_MAKANAN = ['Indonesia', 'Malaysia', 'Singapura', 'Thailand', 'Vietnam', 'Filipina', 'India', 'China', 'Jepang', 'Korea'];
+    const WAKTU_MAKAN = ['Sarapan', 'Makan Siang', 'Makan Malam'];
+    const KATEGORI_MAKANAN = ['Tinggi Protein', 'Cemilan', 'Makanan Berat', 'Makanan Ringan', 'Sup/Soup', 'Minuman', 'Puding/Desert', 'Salad', 'Gorengan', 'Bakar/Panggang', 'Kukus/Steam', 'Tumis/Wok', 'Lainnya'];
+
     // --- LOGIKA VALIDASI NAMA RESEP ---
     const inputNamaResep = document.getElementById('input-nama-resep');
     const iconCheckResep = document.getElementById('icon-check-resep');
@@ -824,6 +1103,7 @@
       if (this.value.trim() !== '') {
         this.classList.add('is-valid');
         iconCheckResep.classList.remove('hidden-icon');
+        clearError(this);
       } else {
         this.classList.remove('is-valid');
         iconCheckResep.classList.add('hidden-icon');
@@ -844,6 +1124,20 @@
     photoInput.addEventListener('change', function (event) {
       const file = event.target.files[0];
       if (file) {
+        // Validasi ukuran file (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Ukuran file terlalu besar. Maksimal 5MB.');
+          this.value = '';
+          return;
+        }
+
+        // Validasi tipe file
+        if (!file.type.match('image.*')) {
+          alert('Format file tidak didukung. Gunakan JPG atau PNG.');
+          this.value = '';
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = function (e) {
           previewImage.src = e.target.result;
@@ -860,14 +1154,17 @@
     function addIngredient() {
       const container = document.getElementById('ingredients-container');
       const rowHTML = `
-                <div class="dynamic-row">
-                    <img src="img/upload_resep/IconDrag.svg" alt="Drag" class="drag-handle">
-                    <div class="ingredient-inputs">
-                        <input type="text" class="form-control input-name" placeholder="Contoh: Bawang Putih">
-                        <input type="text" class="form-control input-amount" placeholder="Takaran">
-                    </div>
-                </div>
-            `;
+        <div class="dynamic-row">
+          <img src="img/upload_resep/IconPoin.svg" alt="Drag" class="drag-handle">
+          <div class="ingredient-inputs">
+            <input type="text" class="form-control input-name" placeholder="Contoh: Bawang Putih">
+            <input type="text" class="form-control input-amount" placeholder="Takaran">
+          </div>
+          <button class="btn-add" onclick="removeRow(this)">
+            <img src="img/upload_resep/iconHapus.svg" alt="Hapus">
+          </button>
+        </div>
+      `;
       container.insertAdjacentHTML('beforeend', rowHTML);
     }
 
@@ -875,25 +1172,367 @@
       const container = document.getElementById('steps-container');
       const stepCount = container.querySelectorAll('.step-item').length + 1;
       const rowHTML = `
-                <div class="dynamic-row step-item">
-                    <div class="step-indicator">${stepCount}</div>
-                    <textarea class="form-control" placeholder="Contoh: Panaskan wajan dengan api sedang..."></textarea>
-                </div>
-            `;
+        <div class="dynamic-row step-item">
+          <div class="step-indicator">${stepCount}</div>
+          <textarea class="form-control" placeholder="Contoh: Panaskan wajan dengan api sedang..."></textarea>
+          <button class="btn-add" onclick="removeStep(this)" style="border:none;color:#ef4444;padding:8px;">
+            <img src="img/upload_resep/iconHapus.svg" alt="Hapus">
+          </button>
+        </div>
+      `;
       container.insertAdjacentHTML('beforeend', rowHTML);
+      renumberSteps();
     }
 
     function addTip() {
       const container = document.getElementById('tips-container');
       const rowHTML = `
-                <div class="dynamic-row">
-                    <div class="step-indicator tip-indicator">
-                        <img src="img/upload_resep/IconTips.svg" alt="Tips">
-                    </div>
-                    <textarea class="form-control" placeholder="Contoh: Pastikan minyak benar-benar panas sebelum memasukkan bumbu..."></textarea>
-                </div>
-            `;
+        <div class="dynamic-row">
+          <div class="step-indicator tip-indicator">
+            <img src="img/upload_resep/IconTips.svg" alt="Tips">
+          </div>
+          <textarea class="form-control" placeholder="Contoh: Pastikan minyak benar-benar panas sebelum memasukkan bumbu..."></textarea>
+          <button class="btn-add" onclick="removeRow(this)" style="border:none;color:#ef4444;padding:8px;">
+            <img src="img/upload_resep/iconHapus.svg" alt="Hapus">
+          </button>
+        </div>
+      `;
       container.insertAdjacentHTML('beforeend', rowHTML);
+    }
+
+    function removeRow(btn) {
+      btn.closest('.dynamic-row').remove();
+    }
+
+    function removeStep(btn) {
+      btn.closest('.dynamic-row').remove();
+      renumberSteps();
+    }
+
+    function renumberSteps() {
+      const steps = document.querySelectorAll('#steps-container .step-item');
+      steps.forEach((step, index) => {
+        step.querySelector('.step-indicator').textContent = index + 1;
+      });
+    }
+
+    // --- VALIDASI FORMULIR ---
+    function setError(element, message) {
+      const formGroup = element.closest('.form-group');
+      if (formGroup) {
+        formGroup.classList.add('error');
+        let errorMsg = formGroup.querySelector('.error-message');
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'error-message';
+          formGroup.appendChild(errorMsg);
+        }
+        errorMsg.textContent = message;
+      }
+    }
+
+    function clearError(element) {
+      const formGroup = element.closest('.form-group');
+      if (formGroup) {
+        formGroup.classList.remove('error');
+      }
+    }
+
+    function clearAllErrors() {
+      document.querySelectorAll('.form-group.error').forEach(el => {
+        el.classList.remove('error');
+      });
+      // Reset border colors
+      document.querySelectorAll('#ingredients-container input').forEach(el => {
+        el.style.borderColor = '';
+      });
+      document.querySelectorAll('#steps-container textarea').forEach(el => {
+        el.style.borderColor = '';
+      });
+      const errorBox = document.getElementById('error-box');
+      if (errorBox) {
+        errorBox.classList.remove('show');
+      }
+    }
+
+    function showGlobalError(errors) {
+      const errorBox = document.getElementById('error-box');
+      const errorList = document.getElementById('error-list');
+
+      if (errorList) {
+        errorList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
+      }
+
+      if (errorBox) {
+        errorBox.classList.add('show');
+        // Scroll ke error box
+        errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function validateForm() {
+      clearAllErrors();
+      const errors = [];
+
+      // 1. Validasi Foto
+      const photoInput = document.getElementById('photo-input');
+      if (!photoInput.files || photoInput.files.length === 0) {
+        errors.push('Foto resep wajib diupload');
+      }
+
+      // 2. Validasi Nama Resep
+      const namaResep = document.getElementById('input-nama-resep');
+      if (!namaResep.value.trim()) {
+        setError(namaResep, 'Nama resep wajib diisi!');
+        errors.push('Nama resep wajib diisi');
+      } else if (namaResep.value.trim().length < 3) {
+        setError(namaResep, 'Nama resep minimal 3 karakter!');
+        errors.push('Nama resep minimal 3 karakter');
+      }
+
+      // 3. Validasi Asal Masakan
+      const asalMasakan = document.getElementById('input-asal-masakan');
+      if (!asalMasakan.value) {
+        setError(asalMasakan, 'Asal masakan wajib dipilih!');
+        errors.push('Asal masakan wajib dipilih');
+      }
+
+      // 4. Validasi Waktu Makan
+      const waktuMakan = document.getElementById('input-waktu-makan');
+      if (!waktuMakan.value) {
+        setError(waktuMakan, 'Waktu makan wajib dipilih!');
+        errors.push('Waktu makan wajib dipilih');
+      }
+
+      // 5. Validasi Kategori Masakan
+      const kategoriMasakan = document.getElementById('input-kategori-masakan');
+      if (!kategoriMasakan.value) {
+        setError(kategoriMasakan, 'Kategori masakan wajib dipilih!');
+        errors.push('Kategori masakan wajib dipilih');
+      }
+
+      // 6. Validasi Bahan (minimal 1 bahan dengan nama)
+      const ingredients = document.querySelectorAll('#ingredients-container .dynamic-row');
+      let hasIngredient = false;
+      let emptyIngredients = 0;
+      ingredients.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs[0] && inputs[0].value.trim()) {
+          hasIngredient = true;
+        } else if (inputs[0] && !inputs[0].value.trim()) {
+          emptyIngredients++;
+          inputs[0].style.borderColor = '#ef4444';
+        }
+      });
+
+      if (!hasIngredient) {
+        errors.push('Bahan-bahan wajib ditambahkan');
+        // Highlight first empty ingredient row
+        const firstIngredient = document.querySelector('#ingredients-container .dynamic-row:first-child input.input-name');
+        if (firstIngredient) {
+          firstIngredient.closest('.form-group') || setError(firstIngredient, 'Nama bahan wajib diisi!');
+        }
+      }
+
+      // 7. Validasi Langkah (minimal 1 langkah)
+      const steps = document.querySelectorAll('#steps-container .step-item');
+      let hasStep = false;
+      steps.forEach(row => {
+        const textarea = row.querySelector('textarea');
+        if (textarea && textarea.value.trim()) {
+          hasStep = true;
+        } else if (textarea && !textarea.value.trim()) {
+          textarea.style.borderColor = '#ef4444';
+        }
+      });
+      if (!hasStep) {
+        errors.push('Langkah pembuatan wajib ditambahkan');
+      }
+
+      // Tampilkan error box jika ada errors
+      if (errors.length > 0) {
+        showGlobalError(errors);
+        return false;
+      }
+
+      return true;
+    }
+
+    // --- EVENT LISTENER UNTUK DROPDOWN ---
+    document.getElementById('input-asal-masakan').addEventListener('change', function () {
+      clearError(this);
+    });
+
+    document.getElementById('input-waktu-makan').addEventListener('change', function () {
+      clearError(this);
+    });
+
+    document.getElementById('input-kategori-masakan').addEventListener('change', function () {
+      clearError(this);
+    });
+
+    // --- PUBLISH RESEP ---
+    function publikasikanResep() {
+      if (!validateForm()) {
+        return;
+      }
+
+      // Ambil data dari formulir
+      const namaResep = document.getElementById('input-nama-resep').value.trim();
+      const dataResep = {
+        nama: namaResep,
+        porsi: document.getElementById('input-porsi')?.value || '',
+        waktuMemasak: document.getElementById('input-waktu')?.value || '',
+        asalMasakan: document.getElementById('input-asal-masakan').value,
+        waktuMakan: document.getElementById('input-waktu-makan').value,
+        kategoriMasakan: document.getElementById('input-kategori-masakan').value,
+        foto: photoInput.files[0] ? photoInput.files[0].name : '',
+        createdAt: new Date().toISOString()
+      };
+
+      // Ambil bahan
+      const bahan = [];
+      document.querySelectorAll('#ingredients-container .dynamic-row').forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs[0] && inputs[0].value.trim()) {
+          bahan.push({
+            nama: inputs[0].value.trim(),
+            takaran: inputs[1]?.value.trim() || ''
+          });
+        }
+      });
+      dataResep.bahan = bahan;
+
+      // Ambil langkah
+      const langkah = [];
+      document.querySelectorAll('#steps-container .step-item').forEach(row => {
+        const textarea = row.querySelector('textarea');
+        if (textarea && textarea.value.trim()) {
+          langkah.push(textarea.value.trim());
+        }
+      });
+      dataResep.langkah = langkah;
+
+      // Ambil tips
+      const tips = [];
+      document.querySelectorAll('#tips-container .dynamic-row').forEach(row => {
+        const textarea = row.querySelector('textarea');
+        if (textarea && textarea.value.trim()) {
+          tips.push(textarea.value.trim());
+        }
+      });
+      dataResep.tips = tips;
+
+      // Simpan ke localStorage
+      const recipes = JSON.parse(localStorage.getItem('cookcart_recipes') || '[]');
+      recipes.unshift(dataResep);
+      localStorage.setItem('cookcart_recipes', JSON.stringify(recipes));
+
+      // Tampilkan modal sukses
+      showSuccessModal(namaResep);
+    }
+
+    function showSuccessModal(recipeName) {
+      // Buat modal
+      const modalHTML = `
+        <div class="modal-overlay show" id="success-modal">
+          <div class="modal-success">
+            <div class="modal-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h2 class="modal-title">Resep Berhasil!</h2>
+            <p class="modal-message">Resep kamu telah berhasil dipublikasikan dan siap dibagikan ke dunia.</p>
+            <div class="modal-recipe-name">📖 ${recipeName}</div>
+            <div class="modal-buttons">
+              <button class="modal-btn modal-btn-secondary" onclick="closeModalAndReset()">
+                Buat Resep Baru
+              </button>
+              <button class="modal-btn modal-btn-primary" onclick="goToJelajah()">
+                Lihat Resep
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Tambahkan modal ke body
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function closeModalAndReset() {
+      const modal = document.getElementById('success-modal');
+      if (modal) {
+        modal.remove();
+      }
+      resetForm();
+    }
+
+    function goToJelajah() {
+      const modal = document.getElementById('success-modal');
+      if (modal) {
+        modal.remove();
+      }
+      window.location.href = 'JelajahResep.html';
+    }
+
+    function resetForm() {
+      document.getElementById('input-nama-resep').value = '';
+      document.getElementById('input-asal-masakan').value = '';
+      document.getElementById('input-waktu-makan').value = '';
+      document.getElementById('input-kategori-masakan').value = '';
+      document.querySelector('.grid-2 .form-group:first-child input').value = '';
+      document.querySelector('.grid-2 .form-group:last-child input').value = '';
+
+      // Reset foto
+      photoInput.value = '';
+      previewImage.src = '';
+      previewImage.style.display = 'none';
+      uploadContent.style.opacity = '1';
+      uploadBox.style.border = '';
+
+      // Reset bahan (keep first row)
+      const container = document.getElementById('ingredients-container');
+      container.innerHTML = `
+        <div class="dynamic-row">
+          <img src="img/upload_resep/IconPoin.svg" alt="Drag" class="drag-handle">
+          <div class="ingredient-inputs">
+            <input type="text" class="form-control input-name" placeholder="Contoh: Bawang Putih">
+            <input type="text" class="form-control input-amount" placeholder="Takaran">
+          </div>
+        </div>
+      `;
+
+      // Reset langkah (keep first row)
+      const stepsContainer = document.getElementById('steps-container');
+      stepsContainer.innerHTML = `
+        <div class="dynamic-row step-item">
+          <div class="step-indicator">1</div>
+          <textarea class="form-control" placeholder="Contoh: Panaskan wajan dengan api sedang..."></textarea>
+        </div>
+      `;
+
+      // Reset tips (keep first row)
+      const tipsContainer = document.getElementById('tips-container');
+      tipsContainer.innerHTML = `
+        <div class="dynamic-row">
+          <div class="step-indicator tip-indicator">
+            <img src="img/upload_resep/IconTips.svg" alt="Tips">
+          </div>
+          <textarea class="form-control" placeholder="Contoh: Pastikan minyak benar-benar panas sebelum memasukkan bumbu..."></textarea>
+        </div>
+      `;
+
+      clearAllErrors();
+    }
+
+    // --- UPDATE TOMBOL PUBLIKASIKAN ---
+    const publishBtn = document.querySelector('.actions-bottom .btn-primary');
+    if (publishBtn) {
+      publishBtn.removeAttribute('href');
+      publishBtn.setAttribute('onclick', 'publikasikanResep()');
+      publishBtn.style.cursor = 'pointer';
     }
   </script>
 </body>
