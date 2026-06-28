@@ -13,11 +13,11 @@
       --brand-primary: #00A859;
       --brand-light: #E8F5EE;
       --text-dark: #1A1A1A;
-      --text-gray: #4B5563;
-      --text-light: #9CA3AF;
-      --border-color: #E5E7EB;
+      --text-gray: #666666;
+      --text-light: #999999;
+      --border-color: #EAEAEA;
       --bg-body: #FFFFFF;
-      --bg-main: #F9FAFB;
+      --bg-search: #F5F5F5;
       --bg-input: #F3F4F6;
 
       /* Warna spesifik form upload resep */
@@ -42,9 +42,9 @@
     }
 
     /* ============================
-           1. SIDEBAR (HANYA DESKTOP)
-           ============================ */
-    .sidebar {
+       1. MAIN NAV (RESPONSIVE)
+       ============================ */
+    .main-nav {
       width: 260px;
       background-color: var(--bg-body);
       border-right: 1px solid var(--border-color);
@@ -55,27 +55,27 @@
       height: 100vh;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 900;
     }
 
-    .sidebar-logo {
-      font-size: 22px;
+    .nav-brand {
+      font-size: 24px;
       font-weight: 800;
       color: var(--brand-dark);
       text-decoration: none;
       margin-bottom: 48px;
       padding-left: 12px;
       letter-spacing: -0.5px;
+      display: block;
     }
 
-    .nav-menu {
-      list-style: none;
+    .nav-links {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .nav-item a {
+    .nav-item {
       display: flex;
       align-items: center;
       gap: 16px;
@@ -83,73 +83,36 @@
       text-decoration: none;
       color: var(--text-gray);
       font-weight: 500;
-      font-size: 14px;
+      font-size: 15px;
       border-radius: 12px;
       transition: all 0.2s ease;
     }
 
-    .nav-item a.active {
+    .nav-item:hover {
+      background-color: var(--bg-input);
+      color: var(--text-dark);
+    }
+
+    .nav-item.active {
       background-color: var(--brand-light);
       color: var(--brand-dark);
       font-weight: 600;
     }
 
-    .nav-item a img.icon {
+    .nav-item .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+    }
+
+    .nav-item img.icon {
       width: 20px;
       height: 20px;
     }
 
-    /* ============================
-           2. BOTTOM NAV (TABLET & MOBILE)
-           ============================ */
-    .bottom-nav {
+    .text-mobile {
       display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: var(--bg-body);
-      border-top: 1px solid var(--border-color);
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
-      z-index: 900;
-      padding: 8px 4px;
-      justify-content: space-around;
-    }
-
-    .bottom-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: var(--text-gray);
-      gap: 4px;
-      flex: 1;
-      min-width: 55px;
-    }
-
-    .bottom-nav-item .icon-wrapper {
-      padding: 6px 14px;
-      border-radius: 50px;
-    }
-
-    .bottom-nav-item img.icon {
-      width: 22px;
-      height: 22px;
-    }
-
-    .bottom-nav-item span {
-      font-size: 10px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .bottom-nav-item.active .icon-wrapper {
-      background-color: var(--brand-light);
-      color: var(--brand-dark);
-    }
-
-    .bottom-nav-item.active span {
-      color: var(--brand-dark);
     }
 
     /* ============================
@@ -763,22 +726,83 @@
     }
 
     /* ============================
-           4. RESPONSIVE DESIGN (MEDIA QUERIES)
-           ============================ */
-
-    /* Tablet / iPad */
+       3. MEDIA QUERIES (RESPONSIVE)
+       ============================ */
     @media (max-width: 1024px) {
-      .sidebar {
+
+      /* Mengubah Sidebar menjadi Bottom Nav */
+      .main-nav {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        padding: 8px 4px;
+        flex-direction: row;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .nav-brand {
         display: none;
       }
 
-      .bottom-nav {
-        display: flex;
+      .nav-links {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        gap: 4px;
+        flex: 1;
+        min-width: 55px;
+        background-color: transparent !important;
+        border-radius: 0;
+      }
+
+      .nav-item:hover {
+        background-color: transparent !important;
+      }
+
+      .nav-item.active {
+        color: var(--brand-dark);
+      }
+
+      .nav-item .icon-wrapper {
+        padding: 6px 14px;
+      }
+
+      .nav-item.active .icon-wrapper {
+        background-color: var(--brand-light);
+      }
+
+      .nav-item img.icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .nav-text {
+        font-size: 10px;
+        white-space: nowrap;
+      }
+
+      .text-desktop {
+        display: none;
+      }
+
+      .text-mobile {
+        display: inline;
       }
 
       body {
         padding-bottom: 70px;
-        /* Ruang untuk bottom nav */
       }
 
       .main-content {
@@ -795,14 +819,13 @@
       }
     }
 
-    /* Mobile / Layar HP */
-    @media (max-width: 640px) {
-      .header h1 {
-        font-size: 26px;
-      }
-
+    @media (max-width: 768px) {
       .main-content {
         padding: 24px 16px;
+      }
+
+      .header h1 {
+        font-size: 26px;
       }
 
       .card {
@@ -826,17 +849,17 @@
         justify-content: center;
       }
 
-      /* Penyesuaian ikon bottom nav untuk HP */
-      .bottom-nav-item .icon-wrapper {
+      /* Penyesuaian ikon nav untuk HP */
+      .nav-item .icon-wrapper {
         padding: 6px 12px;
       }
 
-      .bottom-nav-item img.icon {
+      .nav-item img.icon {
         width: 20px;
         height: 20px;
       }
 
-      .bottom-nav-item span {
+      .nav-text {
         font-size: 9px;
       }
     }
@@ -845,47 +868,39 @@
 
 <body>
 
-  <aside class="sidebar">
-    <a class="sidebar-logo">Cook&Cart</a>
-    <ul class="nav-menu">
-      <li class="nav-item">
-        <a href="JelajahResep.html">
-          <img src="img/rencana_menu_mingguan/IconJelajah copy.svg" alt="" class="icon">
-          <span>Jelajah</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="rencanaMenuMingguan.html">
-          <img src="img/rencana_menu_mingguan/IconRencana.svg" alt="" class="icon">
-          <span>Rencana</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="PDF_belanja.html">
-          <img src="img/rencana_menu_mingguan/IconPDFRencana.svg" alt="" class="icon">
-          <span>PDF Rencana</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="Pengeluaran.html">
-          <img src="img/rencana_menu_mingguan/IconPengeluaran.svg" alt="" class="icon">
-          <span>Pengeluaran</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="upload_Resep.html" class="active">
-          <img src="img/rencana_menu_mingguan/IconUploadResep.svg" alt="" class="icon">
-          <span>Upload Resep</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="profil.html">
-          <img src="img/rencana_menu_mingguan/IconProfil.svg" alt="" class="icon">
-          <span>Profil</span>
-        </a>
-      </li>
-    </ul>
-  </aside>
+  <!-- NAVBAR TUNGGAL (BERUBAH SESUAI UKURAN LAYAR) -->
+  <nav class="main-nav">
+    <a class="nav-brand">Cook&Cart</a>
+    <div class="nav-links">
+      <a href="JelajahResep.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/jelajah_resep/IconJelajah.svg" alt="Jelajah" class="icon"></div>
+        <span class="nav-text">Jelajah</span>
+      </a>
+      <a href="rencanaMenuMingguan.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/jelajah_resep/IconRencana.svg" alt="Rencana" class="icon"></div>
+        <span class="nav-text">Rencana</span>
+      </a>
+      <a href="PDF_belanja.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/jelajah_resep/IconPDFRencana.svg" alt="PDF" class="icon"></div>
+        <span class="nav-text text-desktop">PDF Rencana</span>
+        <span class="nav-text text-mobile">PDF</span>
+      </a>
+      <a href="Pengeluaran.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/jelajah_resep/IconPengeluaran.svg" alt="Pengeluaran" class="icon"></div>
+        <span class="nav-text text-desktop">Pengeluaran</span>
+        <span class="nav-text text-mobile">Biaya</span>
+      </a>
+      <a href="upload_Resep.html" class="nav-item active">
+        <div class="icon-wrapper"><img src="img/jelajah_resep/IconUploadResep.svg" alt="Upload" class="icon"></div>
+        <span class="nav-text text-desktop">Upload Resep</span>
+        <span class="nav-text text-mobile">Upload</span>
+      </a>
+      <a href="profil.html" class="nav-item">
+        <div class="icon-wrapper"><img src="img/jelajah_resep/IconProfil.svg" alt="Profil" class="icon"></div>
+        <span class="nav-text">Profil</span>
+      </a>
+    </div>
+  </nav>
 
   <main class="main-content">
     <header class="header">
@@ -1062,33 +1077,6 @@
     </div>
   </main>
 
-  <nav class="bottom-nav">
-    <a href="#" class="bottom-nav-item">
-      <div class="icon-wrapper"><img src="img/PDF_belanja/IconJelajah.svg" alt="" class="icon"></div>
-      <span>Jelajah</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
-      <div class="icon-wrapper"><img src="img/PDF_belanja/IconRencana.svg" alt="" class="icon"></div>
-      <span>Rencana</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
-      <div class="icon-wrapper"><img src="img/PDF_belanja/IconPDFRencana.svg" alt="" class="icon"></div>
-      <span>PDF</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
-      <div class="icon-wrapper"><img src="img/PDF_belanja/IconPengeluaran.svg" alt="" class="icon"></div>
-      <span>Biaya</span>
-    </a>
-    <a href="#" class="bottom-nav-item active">
-      <div class="icon-wrapper"><img src="img/PDF_belanja/IconUploadResep.svg" alt="" class="icon"></div>
-      <span>Upload</span>
-    </a>
-    <a href="#" class="bottom-nav-item">
-      <div class="icon-wrapper"><img src="img/PDF_belanja/IconProfil.svg" alt="" class="icon"></div>
-      <span>Profil</span>
-    </a>
-  </nav>
-
   <script>
     // --- KONSTANTA OPSI ---
     const ASAL_MAKANAN = ['Indonesia', 'Malaysia', 'Singapura', 'Thailand', 'Vietnam', 'Filipina', 'India', 'China', 'Jepang', 'Korea'];
@@ -1160,7 +1148,7 @@
             <input type="text" class="form-control input-name" placeholder="Contoh: Bawang Putih">
             <input type="text" class="form-control input-amount" placeholder="Takaran">
           </div>
-          <button class="btn-add" onclick="removeRow(this)">
+          <button class="btn-add" onclick="removeStep(this)" style="border:none; padding:8px;">
             <img src="img/upload_resep/IconHapus.svg" alt="Hapus">
           </button>
         </div>
@@ -1175,7 +1163,7 @@
         <div class="dynamic-row step-item">
           <div class="step-indicator">${stepCount}</div>
           <textarea class="form-control" placeholder="Contoh: Panaskan wajan dengan api sedang..."></textarea>
-          <button class="btn-add" onclick="removeStep(this)" style="border:none;color:#ef4444;padding:8px;">
+          <button class="btn-add" onclick="removeStep(this)" style="border:none; padding:8px;">
             <img src="img/upload_resep/IconHapus.svg" alt="Hapus">
           </button>
         </div>
@@ -1192,7 +1180,7 @@
             <img src="img/upload_resep/IconTips.svg" alt="Tips">
           </div>
           <textarea class="form-control" placeholder="Contoh: Pastikan minyak benar-benar panas sebelum memasukkan bumbu..."></textarea>
-          <button class="btn-add" onclick="removeRow(this)" style="border:none;color:#ef4444;padding:8px;">
+          <button class="btn-add" onclick="removeStep(this)" style="border:none; padding:8px;">
             <img src="img/upload_resep/IconHapus.svg" alt="Hapus">
           </button>
         </div>
